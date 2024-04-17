@@ -1,3 +1,10 @@
+type Movie = {
+    title: string;
+    backdrop_path: string;
+    overview: string;
+    genre_ids: number[];
+}
+
 export const getTrendingMovies = async () => {
     try {
     const res = await fetch(`${process.env.NEXT_TMDB_API_BASE_URL}/trending/movie/week?api_key=${process.env.NEXT_TMDB_API_KEY}`)
@@ -5,7 +12,15 @@ export const getTrendingMovies = async () => {
         throw new Error('Failed to fetch data')
     };
     const data = await res.json()
-    return data.results
+    const movies = {
+        data: data.results.map((movie: Movie) => ({
+            title: movie.title,
+            backdrop_path: movie.backdrop_path,
+            overview: movie.overview,
+            genre_ids: movie.genre_ids
+        }))
+    }
+    return movies;
     } catch (error) {
         console.error(error);
     }

@@ -1,8 +1,6 @@
 import VerticalCarousel from "./components/vertical-carousel"
-import { useLoaderData } from 'next/navigation';
 
 const Loading = () => {
-  const movies = useLoaderData();
   const paragraphs = [
     "Fetching records.",
     "Sorting records.",
@@ -11,12 +9,12 @@ const Loading = () => {
   ]
 
     return (
-      <div className="container mx-auto px-4">
-        <VerticalCarousel paragraphs={paragraphs} interval={4000} />
-      </div>
+      <>
+        <div className="container mx-auto px-4">
+          <VerticalCarousel paragraphs={paragraphs} interval={4000} />
+        </div>
+      </>
     )
   }
 
 export default Loading;
-
-export const loader = moviesLoader;
