@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#root {
+  @apply w-full gap-8 bg-gradient-to-b from-navy-800 to-navy-700 font-body text-light-blue-300;
+}
+
+::-webkit-scrollbar {
+  @apply w-2;
+}
+::-webkit-scrollbar-thumb {
+  @apply rounded-lg bg-light-blue-600;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-light-blue-500;
+}
+::-webkit-scrollbar-thumb:active {
+  @apply bg-light-blue-400;
+}
+::-webkit-scrollbar-track {
+  @apply bg-navy-600;
+}
