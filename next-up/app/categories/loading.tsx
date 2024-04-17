@@ -1,8 +1,6 @@
-import VerticalCarousel from "./components/vertical-carousel"
-import { useLoaderData } from 'next/navigation';
+import VerticalCarousel from "~/app/components/vertical-carousel"
 
 const Loading = () => {
-  const movies = useLoaderData();
   const paragraphs = [
     "Fetching records.",
     "Sorting records.",
@@ -17,6 +15,5 @@ const Loading = () => {
     )
   }
 
-export default Loading;
-
-export const loader = moviesLoader;
+  export default Loading;
+  

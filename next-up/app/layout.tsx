@@ -42,7 +42,7 @@ type RootLayoutProps = Record<'children' | 'modal', ReactNode>
 export default function RootLayout({ children, modal }: RootLayoutProps) {
   return (
     <html lang="en" className={`${inter.variable} ${syne.variable}`}>
-      <body className="grid grid-rows-[auto,1fr,auto] min-h-screen bg-gradient-to-b from-navy-800 to-navy-700 text-light-blue-300 font-body">
+      <body className="w-full h-screen flex flex-col justify-between gap-8 bg-gradient-to-b from-navy-800 to-navy-700 text-light-blue-300 font-body">
         <TopNav />
 
         <main className="p-4">{children}</main>

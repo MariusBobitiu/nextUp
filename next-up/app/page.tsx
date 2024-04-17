@@ -1,11 +1,21 @@
-import Image from "next/image";
+// import Image from "next/image";
+import { Suspense } from "react";
+import Loading from "./loading";
+import Search from "./components/search";
+import MoviesContainer from "~/app/components/movies-container";
 
-export default function Home() {
+const Home = () => {
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div>
-        <h1>Main Page</h1>
-      </div>
+    <main className="flex w-full min-h-96 h-full overflow-hidden flex-col items-center justify-between p-12 gap-4">
+      <Suspense fallback={<Loading />}>
+        <div className="size-full">
+          <Search />
+        </div>
+        <MoviesContainer movies={movies} />
+      </Suspense>
     </main>
   );
 }
+
+export default Home;
