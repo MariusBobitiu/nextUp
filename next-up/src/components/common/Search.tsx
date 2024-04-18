@@ -1,7 +1,18 @@
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
-const Search = ({ term }: { term?: string }) => {
+const Search = () => {
   const navigate = useNavigate()
+  const location = useLocation()
+  const [searchTerm, setSearchTerm] = useState<string>('')
+
+  useEffect(() => {
+    if (location.search) {
+      const searchParams = new URLSearchParams(location.search)
+      const searchTerm = searchParams.get('search')
+      setSearchTerm(searchTerm || '')
+    }
+  }, [location.search])
 
   return (
     <form
@@ -19,8 +30,9 @@ const Search = ({ term }: { term?: string }) => {
         <input
           type="search"
           name="searchField"
-          defaultValue={typeof term === 'string' ? decodeURI(term) : ''}
+          value={searchTerm}
           autoComplete="off"
+          onChange={(e) => setSearchTerm(e.target.value)}
           className="block w-full rounded-2xl border border-navy-700 bg-navy-600 p-4 pl-10 text-sm text-white placeholder-gray-400 outline-none focus:border-accent-teal-500"
           required
         />

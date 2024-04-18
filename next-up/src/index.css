@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  @apply bg-navy-800;
+}
+
 #root {
   @apply w-full gap-8 bg-gradient-to-b from-navy-800 to-navy-700 font-body text-light-blue-300;
 }

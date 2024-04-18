@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query'
 import Loading from './layout/Loading'
 import { IoCloseCircleOutline as CloseIcon } from 'react-icons/io5'
+import placeholder from '@/assets/placeholder.jpg'
 
 const fetchMovie = async (id: number) => {
   const apiUrl = `${import.meta.env.VITE_TMDB_API_BASE_URL}/movie/${id}?language=en-UL&api_key=${import.meta.env.VITE_TMDB_API_KEY}`
@@ -34,26 +35,26 @@ const MovieModal = ({ id, onClose }: MovieModalProps) => {
 
   return (
     <div className="fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-50">
-      <div className="relative h-[600px] w-[400px] rounded-lg bg-navy-700 p-4">
-        <button
-          onClick={onClose}
-          className="absolute right-2 top-2 z-10 rounded-full bg-navy-600 p-2"
-        >
+      <div className="relative flex h-3/5 w-1/2 gap-4 rounded-lg bg-navy-700 p-8">
+        <button onClick={onClose} className="absolute right-2 top-2 z-10 p-2">
           <CloseIcon className="h-6 w-6 text-white" />
         </button>
-        <div className="relative left-0 top-0 h-[300px] w-full rounded-lg">
+        <div className="relative left-0 top-0 h-full w-full rounded-lg">
           <img
-            src={`${import.meta.env.VITE_TMDB_IMAGE_BASE_URL}/${movie.backdrop_path}`}
+            src={
+              movie.poster_path
+                ? `${import.meta.env.VITE_TMDB_IMAGE_BASE_URL}/${movie.poster_path}`
+                : movie.backdrop_path
+                  ? `${import.meta.env.VITE_TMDB_IMAGE_BASE_URL}/${movie.backdrop_path}`
+                  : placeholder
+            }
             alt="image placeholder"
-            className="h-full w-full rounded-lg object-cover"
+            className="h-full w-full rounded-lg bg-center object-cover"
           />
-          <div className="absolute left-0 top-0 h-full w-full rounded-lg bg-gradient-to-t from-navy-700 to-transparent" />
         </div>
-        <div className="absolute bottom-2 left-0 z-10 h-[300px] w-full p-4">
-          <h1 className="-mt-4 font-display text-2xl font-extrabold">
-            {movie.title}
-          </h1>
-          <div className="my-2 flex flex-wrap items-center justify-start gap-1 text-xs">
+        <div className="relative flex w-full flex-col gap-4 p-2">
+          <h1 className="font-display text-4xl font-bold">{movie.title}</h1>
+          <div className="my-2 flex flex-wrap items-center justify-start gap-1 text-sm">
             {movie.genres.map((genre: { id: number; name: string }) => (
               <span
                 key={genre.id}
@@ -63,7 +64,19 @@ const MovieModal = ({ id, onClose }: MovieModalProps) => {
               </span>
             ))}
           </div>
-          <p className="line-clamp-6 py-4 text-sm">{movie.overview}</p>
+          <div className="flex justify-between text-lg">
+            <div className="flex flex-col">
+              <span>Rating: {movie.vote_average}</span>
+              <span>({movie.vote_count} votes)</span>
+            </div>
+            <span>{movie.release_date.substring(0, 4)}</span>
+          </div>
+          <p className="">{movie.overview}</p>
+          <div className="flex gap-4">
+            <span className="text-light-blue/50">
+              Duration: {movie.runtime} mins
+            </span>
+          </div>
         </div>
       </div>
     </div>

@@ -32,7 +32,7 @@ const Navbar = () => {
         <Link text="Home" />
         <Link text="Categories" />
         <Link text="Swiper" />
-        <Link text="AI Search Feature" />
+        <Link text="AI Powered Search" />
       </ul>
 
       <ul className="flex items-center gap-4 text-sm font-medium text-white">
