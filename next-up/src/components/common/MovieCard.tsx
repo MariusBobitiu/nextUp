@@ -1,7 +1,7 @@
-import getGenre from '@/services/getGenre'
 import { useState } from 'react'
 import placeholder from '@/assets/placeholder.jpg'
 import { MovieCardProps } from '@/types/MovieCard'
+import { getMovieGenre, getTVGenre } from '@/services/getGenre'
 
 const MovieCard = ({
   onClick,
@@ -43,7 +43,7 @@ const MovieCard = ({
                 key={genre.toString() + index}
                 className="rounded-lg border border-accent-teal px-2 py-1"
               >
-                {getGenre(genre)}
+                {getMovieGenre(genre) || getTVGenre(genre)}
               </span>
             ))}
         </div>

@@ -1,17 +1,24 @@
 // type Props = {}
 
+import AiForm from '@/components/AiForm'
+import Loading from '@/components/layout/Loading'
+import { Suspense } from 'react'
+
 const AiPoweredSearch = () => {
   return (
-    <div className="flex min-h-[800px] w-full items-center justify-center">
-      <div className="rounded-xl bg-accent-teal p-16">
-        <h1 className="font-display text-2xl font-bold text-white">
-          Not Implemented yet
-        </h1>
-        <p className="font-body text-lg text-white">
-          This feature is on my TODO list.
-        </p>
-      </div>
-    </div>
+    <main className="flex h-full w-full flex-col gap-4 overflow-hidden p-12">
+      <Suspense fallback={<Loading />}>
+        <div className="mb-4 w-full">
+          <h1 className="text-center text-4xl font-bold">AI Powered Search</h1>
+          <p className="text-center text-lg">
+            Tell us what you like and we'll find the perfect movie for you!
+          </p>
+        </div>
+        <div className="w-full">
+          <AiForm />
+        </div>
+      </Suspense>
+    </main>
   )
 }
 

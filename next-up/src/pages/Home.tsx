@@ -4,11 +4,12 @@ import Search from '@/components/common/Search'
 import MovieCard from '@/components/common/MovieCard'
 import MovieModal from '@/components/MovieModal'
 import { useQuery } from 'react-query'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { MovieCardProps } from '@/types/MovieCard'
+import Pagination from '@/components/common/Pagination'
 
-const fetchMovies = async () => {
-  const apiUrl = `${import.meta.env.VITE_TMDB_API_BASE_URL}/trending/movie/week?language=en-UK&api_key=${import.meta.env.VITE_TMDB_API_KEY}`
+const fetchMovies = async (page: number) => {
+  const apiUrl = `${import.meta.env.VITE_TMDB_API_BASE_URL}/trending/all/week?language=en-UK&page=${page}&api_key=${import.meta.env.VITE_TMDB_API_KEY}`
 
   const res = await fetch(apiUrl)
   if (!res.ok) {
@@ -16,25 +17,48 @@ const fetchMovies = async () => {
   }
 
   const data = await res.json()
-  return data.results
+  return data
 }
 
 const Home = () => {
   const [movieId, setMovieId] = useState<number>(0)
-  const [searchTerm, setSearchTerm] = useState<string>('')
+  const [movieType, setMovieType] = useState<'movie' | 'tv'>('movie')
+  const [term, setTerm] = useState<string>('')
+  const [page, setPage] = useState<number>(1)
 
   const location = useLocation()
+  const navigate = useNavigate()
 
   useEffect(() => {
-    if (location.search) {
-      const searchParams = new URLSearchParams(location.search)
-      const searchTerm = searchParams.get('search')
-      setSearchTerm(searchTerm || '')
-    }
+    const searchParams = new URLSearchParams(location.search)
+    const page = parseInt(searchParams.get('page') || '1', 10)
+    const searchTerm = searchParams.get('search') || ''
+
+    setTerm(searchTerm)
+    setPage(page)
   }, [location.search])
 
-  const fetchMoviesByTerm = async () => {
-    const apiUrl = `${import.meta.env.VITE_TMDB_API_BASE_URL}/search/movie?query=${searchTerm}&language=en-UK&api_key=${import.meta.env.VITE_TMDB_API_KEY}`
+  useEffect(() => {
+    if (term) {
+      setPage(1)
+    }
+  }, [term])
+
+  useEffect(() => {
+    console.log('Page changed:', page)
+    console.log('Search term:', term)
+  }, [page, term])
+
+  const handlePageChange = (newPage: number) => {
+    const searchParams = new URLSearchParams(location.search)
+    searchParams.set('page', newPage.toString())
+    if (term) searchParams.set('search', term)
+    navigate(`?${searchParams.toString()}`, { replace: true })
+  }
+
+  const fetchMoviesByTerm = async (page: number, searchTerm: string) => {
+    const apiUrl = `${import.meta.env.VITE_TMDB_API_BASE_URL}/search/multi?query=${searchTerm}&language=en-UK&page=${page}&api_key=${import.meta.env.VITE_TMDB_API_KEY}`
+    console.log('Fetching movies by term:', apiUrl)
 
     const res = await fetch(apiUrl)
     if (!res.ok) {
@@ -42,7 +66,7 @@ const Home = () => {
     }
 
     const data = await res.json()
-    return data.results
+    return data
   }
 
   const {
@@ -50,23 +74,25 @@ const Home = () => {
     isLoading,
     error,
   } = useQuery(
-    ['movies', searchTerm],
-    searchTerm !== '' ? fetchMoviesByTerm : fetchMovies,
+    ['movies', term, page],
+    () => (term !== '' ? fetchMoviesByTerm(page, term) : fetchMovies(page)),
     {
+      keepPreviousData: true,
       enabled: true,
     }
   )
 
   useEffect(() => {
-    if (searchTerm) {
-      document.title = `Next Up - Search | ${searchTerm}`
+    if (term) {
+      document.title = `Next Up - Search | ${term}`
     } else {
       document.title = 'Next Up - Home'
     }
-  }, [searchTerm])
+  }, [term])
 
-  const openModal = (id: number) => {
+  const openModal = (id: number, type: 'movie' | 'tv') => {
     console.log(`Opening Modal for id: ${id}`)
+    setMovieType(type)
     setMovieId(id)
   }
 
@@ -81,20 +107,36 @@ const Home = () => {
           <Search />
         </div>
         <div className="mt-8 flex h-2/3 w-full flex-wrap items-center justify-center gap-4 overflow-auto">
-          {movies &&
-            movies.map((movie: MovieCardProps) => (
-              <MovieCard
-                onClick={() => openModal(movie.id as number)}
-                key={movie.id}
-                title={movie.title}
-                overview={movie.overview}
-                poster_path={movie.poster_path}
-                backdrop_path={movie.backdrop_path}
-                genre_ids={movie.genre_ids}
-              />
-            ))}
+          {movies.results?.map((movie: MovieCardProps) => (
+            <MovieCard
+              onClick={() =>
+                openModal(
+                  movie.id as number,
+                  movie.media_type as 'movie' | 'tv'
+                )
+              }
+              key={movie.id}
+              title={movie.title || movie.name || ''}
+              overview={movie.overview}
+              poster_path={movie.poster_path}
+              backdrop_path={movie.backdrop_path}
+              genre_ids={movie.genre_ids}
+            />
+          ))}
         </div>
-        <MovieModal id={movieId} onClose={() => setMovieId(0)} />
+        <Pagination
+          currentPage={movies?.page || 1}
+          totalPages={movies?.total_pages || 1}
+          onPageChange={(newPage: number) => {
+            handlePageChange(newPage)
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }}
+        />
+        <MovieModal
+          type={movieType}
+          id={movieId}
+          onClose={() => setMovieId(0)}
+        />
       </Suspense>
     </main>
   )

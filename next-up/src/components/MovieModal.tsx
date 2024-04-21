@@ -3,8 +3,9 @@ import Loading from './layout/Loading'
 import { IoCloseCircleOutline as CloseIcon } from 'react-icons/io5'
 import placeholder from '@/assets/placeholder.jpg'
 
-const fetchMovie = async (id: number) => {
-  const apiUrl = `${import.meta.env.VITE_TMDB_API_BASE_URL}/movie/${id}?language=en-UL&api_key=${import.meta.env.VITE_TMDB_API_KEY}`
+const fetchMovies = async (id: number, type: 'tv' | 'movie' | 'person') => {
+  const apiUrl = `${import.meta.env.VITE_TMDB_API_BASE_URL}/${type}/${id}?language=en-UK&api_key=${import.meta.env.VITE_TMDB_API_KEY}`
+  console.log('Fetching movie:', apiUrl)
 
   const res = await fetch(apiUrl)
   if (!res.ok) {
@@ -17,21 +18,24 @@ const fetchMovie = async (id: number) => {
 
 type MovieModalProps = {
   id: number
+  type: 'movie' | 'tv' | 'person'
   onClose: () => void
 }
 
-const MovieModal = ({ id, onClose }: MovieModalProps) => {
+const MovieModal = ({ id, type, onClose }: MovieModalProps) => {
   const {
     data: movie,
     isLoading,
     error,
-  } = useQuery(['movie', id], () => fetchMovie(id), { enabled: id !== 0 })
+  } = useQuery(['movie', id], () => fetchMovies(id, type), {
+    enabled: id !== 0,
+  })
 
   if (isLoading) return <Loading />
   if (error)
     return <div className="w-full text-center">Error fetching movie!</div>
 
-  if (!movie) return null
+  if (!movie || type === 'person') return null
 
   return (
     <div className="fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-50">
@@ -69,12 +73,14 @@ const MovieModal = ({ id, onClose }: MovieModalProps) => {
               <span>Rating: {movie.vote_average}</span>
               <span>({movie.vote_count} votes)</span>
             </div>
-            <span>{movie.release_date.substring(0, 4)}</span>
+            <span>{movie.release_date?.substring(0, 4)}</span>
           </div>
           <p className="">{movie.overview}</p>
           <div className="flex gap-4">
             <span className="text-light-blue/50">
-              Duration: {movie.runtime} mins
+              {type === 'movie'
+                ? `Duration: ${movie.runtime} mins`
+                : `Total: ${movie.seasons.length} seasons`}
             </span>
           </div>
         </div>

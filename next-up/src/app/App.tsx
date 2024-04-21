@@ -6,7 +6,8 @@ import {
 } from 'react-router-dom'
 import Home from '@/pages/Home'
 import Categories from '@/pages/Categories'
-import Category from '@/pages/Category'
+import MovieCategory from '@/pages/MovieCategory'
+import TVCategory from '@/pages/TVCategory'
 import Swiper from '@/pages/Swiper'
 import AiPoweredSearch from '@/pages/AiPoweredSearch'
 import Layout from '@/components/layout/Layout'
@@ -28,7 +29,8 @@ const App = () => {
                 path="/categories/categories"
                 element={<Navigate to="/categories" />}
               />
-              <Route path="/categories/:id" element={<Category />} />
+              <Route path="/categories/movie/:id" element={<MovieCategory />} />
+              <Route path="/categories/tv/:id" element={<TVCategory />} />
               <Route path="/swiper" element={<Swiper />} />
               <Route path="/ai-powered-search" element={<AiPoweredSearch />} />
             </Routes>

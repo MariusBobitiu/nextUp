@@ -1,69 +1,112 @@
 import Loading from '@/components/layout/Loading'
 import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 type CategoriesProps = {
   children?: React.ReactNode
 }
 
-type categoryProps = {
+type CategoryProps = {
   id: number
   name: string
 }
 
-const CategoriesLayout = ({ children }: CategoriesProps) => {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const { categoryId } = useParams()
-  const [activeCategory, setActiveCategory] = useState<string>('' as string)
+type ActiveCategory = {
+  id: number
+  name: string
+  type: 'movie' | 'tv'
+}
 
-  const fetchCategories = async () => {
-    const apiUrl = `${import.meta.env.VITE_TMDB_API_BASE_URL}/genre/movie/list?language=en-UK&api_key=${import.meta.env.VITE_TMDB_API_KEY}`
+const fetchMovieCategories = async () => {
+  const apiUrl = `${import.meta.env.VITE_TMDB_API_BASE_URL}/genre/movie/list?language=en-UK&api_key=${import.meta.env.VITE_TMDB_API_KEY}`
 
-    const res = await fetch(apiUrl)
-    if (!res.ok) {
-      throw new Error('Network response was not ok: ' + res.status)
-    }
-
-    const data = await res.json()
-    return data.genres
+  const res = await fetch(apiUrl)
+  if (!res.ok) {
+    throw new Error('Network response was not ok: ' + res.status)
   }
 
+  const data = await res.json()
+  return data.genres
+}
+
+const fetchTVCategories = async () => {
+  const apiUrl = `${import.meta.env.VITE_TMDB_API_BASE_URL}/genre/tv/list?language=en-UK&api_key=${import.meta.env.VITE_TMDB_API_KEY}`
+
+  const res = await fetch(apiUrl)
+  if (!res.ok) {
+    throw new Error('Network response was not ok: ' + res.status)
+  }
+
+  const data = await res.json()
+  return data.genres
+}
+
+const CategoriesLayout = ({ children }: CategoriesProps) => {
+  const navigate = useNavigate()
+  // const location = useLocation()
+  const { categoryId } = useParams()
+  const [activeCategory, setActiveCategory] = useState<ActiveCategory | null>(
+    null
+  )
+
   const {
-    data: categories,
-    isLoading,
-    error,
-  } = useQuery('categories', fetchCategories, {
-    onSuccess: (data) => {
-      const initialCategory = data.find(
-        (cat: categoryProps) => cat.id === Number(categoryId)
-      )
-      if (initialCategory) setActiveCategory(initialCategory.name)
-    },
-  })
+    data: movieCategories,
+    isLoading: movieLoading,
+    error: movieError,
+  } = useQuery<CategoryProps[]>('movieCategories', fetchMovieCategories)
+  const {
+    data: tvCategories,
+    isLoading: tvLoading,
+    error: tvError,
+  } = useQuery<CategoryProps[]>('tvCategories', fetchTVCategories)
+
+  const isLoading = movieLoading || tvLoading
+  const error = movieError || tvError
 
   useEffect(() => {
-    if (!categories) return
-    const active = categories.find(
-      (cat: categoryProps) =>
+    if (!movieCategories || !tvCategories) return
+    const movieActive = movieCategories.find(
+      (cat: CategoryProps) =>
         cat.id === Number(location.pathname.split('/').pop())
     )
-    if (active) {
-      setActiveCategory(active.name)
-      document.title = `Next Up - Categories | ${active.name}`
-    }
-  }, [location.pathname, categories])
-
-  const selectCategory = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    const category = categories.find(
-      (category: categoryProps) => category.name === e.currentTarget.textContent
+    const tvActive = tvCategories.find(
+      (cat: CategoryProps) =>
+        cat.id === Number(location.pathname.split('/').pop())
     )
-    if (category) {
-      setActiveCategory(category.name) // Set active category
-      navigate(`/categories/${category.id}`)
+    if (movieActive) {
+      setActiveCategory({
+        id: movieActive.id,
+        name: movieActive.name,
+        type: 'movie',
+      })
+      document.title = `Next Up - Categories | ${movieActive.name}`
+    } else if (tvActive) {
+      setActiveCategory({ id: tvActive.id, name: tvActive.name, type: 'tv' })
+      document.title = `Next Up - Categories | ${tvActive.name}`
     }
+  }, [location.pathname, movieCategories, tvCategories])
+
+  useEffect(() => {
+    // Function to find and set active category
+    const findCategory = (
+      categories: CategoryProps[],
+      type: 'movie' | 'tv'
+    ) => {
+      const category = categories.find((cat) => cat.id === Number(categoryId))
+      if (category) {
+        setActiveCategory({ id: category.id, name: category.name, type })
+        document.title = `Next Up - Categories | ${category.name}`
+      }
+    }
+
+    if (movieCategories) findCategory(movieCategories, 'movie')
+    if (tvCategories) findCategory(tvCategories, 'tv')
+  }, [categoryId, movieCategories, tvCategories, setActiveCategory])
+
+  const selectCategory = (category: CategoryProps, type: 'movie' | 'tv') => {
+    setActiveCategory({ id: category.id, name: category.name, type })
+    navigate(`/categories/${type}/${category.id}`)
   }
 
   if (isLoading) return <Loading />
@@ -74,13 +117,26 @@ const CategoriesLayout = ({ children }: CategoriesProps) => {
     <>
       <div className="grid size-full grid-cols-12 p-24">
         <aside className="col-span-2">
-          <h1 className="mb-4 font-display text-2xl">Categories</h1>
+          <h1 className="mb-4 font-display text-2xl">Movies</h1>
           <ul className="flex flex-col gap-2 text-xl text-light-blue-500">
-            {categories.map((category: categoryProps) => (
+            {movieCategories?.map((category: CategoryProps) => (
               <li key={category.id}>
                 <button
-                  className={`hover:text-accent-teal-700 ${activeCategory === category.name && 'text-accent-teal-400'}`}
-                  onClick={selectCategory}
+                  className={`hover:text-light-blue-700 ${activeCategory?.type === 'movie' && activeCategory?.name === category.name && 'text-accent-teal-400 hover:text-accent-teal-400'}`}
+                  onClick={() => selectCategory(category, 'movie')}
+                >
+                  {category.name}
+                </button>
+              </li>
+            ))}
+          </ul>
+          <h1 className="mb-4 mt-6 font-display text-2xl">TV Series</h1>
+          <ul className="flex flex-col gap-2 text-xl text-light-blue-500">
+            {tvCategories?.map((category: CategoryProps) => (
+              <li key={category.id}>
+                <button
+                  className={`hover:text-light-blue-700 ${activeCategory?.type === 'tv' && activeCategory?.name === category.name && 'text-accent-teal-400 hover:text-accent-teal-400'}`}
+                  onClick={() => selectCategory(category, 'tv')}
                 >
                   {category.name}
                 </button>
