@@ -22,7 +22,7 @@ type SwiperCardProps = {
 const SwiperCard = ({ movie, onSwipe }: SwiperCardProps) => {
   return (
     <TinderCard
-      onSwipe={(dir) => onSwipe(movie.id, dir)}
+      onSwipe={(dir) => onSwipe(movie.id as number, dir)}
       preventSwipe={['up', 'down']}
     >
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">

@@ -30,9 +30,10 @@ const Navbar = () => {
 
       <ul className="flex items-center gap-8 text-lg font-medium text-white">
         <Link text="Home" />
+        <Link text="Search" />
         <Link text="Categories" />
-        <Link text="Swiper" />
-        <Link text="AI Powered Search" />
+        {/* <Link text="Swiper" />
+        <Link text="AI Powered Search" /> */}
       </ul>
 
       <ul className="flex items-center gap-4 text-sm font-medium text-white">

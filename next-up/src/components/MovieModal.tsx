@@ -62,7 +62,7 @@ const MovieModal = ({ id, type, onClose }: MovieModalProps) => {
             {movie.genres.map((genre: { id: number; name: string }) => (
               <span
                 key={genre.id}
-                className="rounded-lg border border-accent-teal px-2 py-1"
+                className="cursor-default rounded-lg border border-accent-teal px-2 py-1 transition-colors duration-500 ease-in-out hover:bg-accent-teal-900"
               >
                 {genre.name}
               </span>

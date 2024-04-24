@@ -12,6 +12,7 @@ import Swiper from '@/pages/Swiper'
 import AiPoweredSearch from '@/pages/AiPoweredSearch'
 import Layout from '@/components/layout/Layout'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import Search from '@/pages/Search'
 
 const queryClient = new QueryClient()
 
@@ -23,6 +24,7 @@ const App = () => {
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/search" element={<Search />} />
               <Route path="/?search=:searchTerm" element={<Home />} />
               <Route path="/categories" element={<Categories />} />
               <Route

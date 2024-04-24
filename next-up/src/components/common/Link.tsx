@@ -12,7 +12,7 @@ const Link = ({ text }: LinkProps) => {
   return (
     <a
       href={lowerCaseHref}
-      className="text-light-blue transition-colors duration-300 ease-in-out hover:text-light-blue-700"
+      className="text-light-blue-300 transition-colors duration-300 ease-in-out hover:text-light-blue-600"
     >
       {text}
     </a>

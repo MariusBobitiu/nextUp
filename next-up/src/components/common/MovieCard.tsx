@@ -34,7 +34,7 @@ const MovieCard = ({
         />
         <div className="absolute left-0 top-0 h-full w-full rounded-t-lg bg-gradient-to-t from-navy-700 to-transparent" />
       </div>
-      <div className="absolute bottom-2 left-0 z-10 h-2/3 w-full p-4">
+      <div className=" bottom-2 left-0 z-10 h-2/3 w-full p-4">
         <h1 className="-mt-4 font-display text-2xl font-extrabold">{title}</h1>
         <div className="my-2 flex flex-wrap items-center justify-start gap-1 text-xs">
           {genre_ids &&
@@ -47,7 +47,7 @@ const MovieCard = ({
               </span>
             ))}
         </div>
-        <p className="line-clamp-6 py-4 text-sm">{overview}</p>
+        <p className="line-clamp-3 py-4 text-sm">{overview}</p>
       </div>
     </div>
   )

@@ -4,12 +4,7 @@ import Loading from '@/components/layout/Loading'
 import SwiperCard from '@/components/SwiperCard'
 import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-
-type movieProps = {
-  id: number
-  title: string
-  poster_path: string
-}
+import { MovieCardProps } from '@/types/MovieCard'
 
 const Swiper = () => {
   const [lastDirection, setLastDirection] = useState<string>('')
@@ -27,9 +22,16 @@ const Swiper = () => {
   }, [])
 
   const onSwipe = (id: number, dir: 'left' | 'right' | 'up' | 'down') => {
-    console.log(`Swiped ${dir} on movie id: ${id}`)
     setLastDirection(dir)
   }
+
+  useEffect(() => {
+    if (lastDirection === 'left') {
+      console.log('You liked the movie!')
+    } else if (lastDirection === 'right') {
+      console.log('You disliked the movie!')
+    }
+  }, [lastDirection])
 
   const { data: movies, isLoading, error } = useQuery('movies', fetchMovies)
 
@@ -37,11 +39,25 @@ const Swiper = () => {
   if (error) return <div>There was an error fetching movies!</div>
 
   return (
-    <div className="flex min-h-[800px] w-full items-center justify-center overflow-hidden">
-      {movies?.results.map((movie: movieProps) => (
-        <SwiperCard key={movie.id} movie={movie} onSwipe={onSwipe} />
-      ))}
-    </div>
+    <>
+      <div className="absolute left-0 top-0 z-40 flex h-screen w-full items-center justify-center overflow-hidden bg-gradient-to-b from-navy-800 to-navy-700">
+        <h1>
+          This feature is currently under development. Please check back later!
+        </h1>
+      </div>
+      <div className="flex min-h-[800px] w-full items-center justify-center overflow-hidden">
+        {movies?.results.map((movie: MovieCardProps) => (
+          <SwiperCard
+            key={movie.id}
+            movie={movie}
+            onSwipe={onSwipe}
+            onClick={() => {
+              console.log('Clicked!')
+            }}
+          />
+        ))}
+      </div>
+    </>
   )
 }
 

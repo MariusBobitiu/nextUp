@@ -1,9 +1,9 @@
 export type MovieCardProps = {
   onClick: () => void
-  id?: number
+  id?: number | undefined
   title: string
-  name?: string
-  media_type?: 'movie' | 'tv' | 'person'
+  name?: string | undefined
+  media_type?: 'movie' | 'tv' | 'person' | undefined
   overview: string
   backdrop_path: string
   poster_path: string
