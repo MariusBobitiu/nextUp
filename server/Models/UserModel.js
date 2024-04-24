@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    resetLink: {
+      type: String,
+      default: "",
+    },
     twoFactorAuth: {
       type: Boolean,
       default: false,

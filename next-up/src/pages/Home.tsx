@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import Loading from '@/components/layout/Loading'
-import Hero from '@/assets/Hero.png '
+import Hero from '@/assets/Hero.png'
 
 const Home = () => {
   return (
