@@ -85,6 +85,7 @@ const CategoriesLayout = ({ children }: CategoriesProps) => {
       setActiveCategory({ id: tvActive.id, name: tvActive.name, type: 'tv' })
       document.title = `Next Up - Categories | ${tvActive.name}`
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname, movieCategories, tvCategories])
 
   useEffect(() => {
@@ -115,7 +116,7 @@ const CategoriesLayout = ({ children }: CategoriesProps) => {
 
   return (
     <>
-      <div className="grid size-full grid-cols-12 p-24">
+      <div className="grid size-full grid-cols-12 overflow-scroll p-24">
         <aside className="col-span-2">
           <h1 className="mb-4 font-display text-2xl">Movies</h1>
           <ul className="flex flex-col gap-2 text-xl text-light-blue-500">
@@ -144,7 +145,9 @@ const CategoriesLayout = ({ children }: CategoriesProps) => {
             ))}
           </ul>
         </aside>
-        <div className="col-span-10 flex flex-col gap-4">{children}</div>
+        <div className="col-span-10 flex flex-col gap-4 overflow-y-scroll">
+          {children}
+        </div>
       </div>
     </>
   )

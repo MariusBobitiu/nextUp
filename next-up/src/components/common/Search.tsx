@@ -19,7 +19,7 @@ const Search = () => {
       onSubmit={(e) => {
         e.preventDefault()
         const searchTerm = new FormData(e.currentTarget).get('searchField')
-        navigate(`/?search=${searchTerm}&page=1`)
+        navigate(`/search?search=${searchTerm}&page=1`)
       }}
     >
       <div className="relative mx-auto max-w-4xl">

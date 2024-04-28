@@ -1,20 +1,15 @@
 import Navbar from './Navbar'
-import Footer from './Footer'
 
 type Props = {
-    children: React.ReactNode
+  children: React.ReactNode
 }
 
-const Layout = ({children}: Props) => {
+const Layout = ({ children }: Props) => {
   return (
     <>
-        <Navbar />
+      <Navbar />
 
-        <main className='p-4 w-full h-full'>
-            {children}
-        </main>
-
-        <Footer/>
+      <main className="h-full w-full overflow-auto p-4">{children}</main>
     </>
   )
 }

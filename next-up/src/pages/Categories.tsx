@@ -66,7 +66,7 @@ const Categories = () => {
         <h1 className="text-3xl font-bold text-light-blue-100">
           Top Rated Movies
         </h1>
-        <div className="flex w-full flex-wrap items-center justify-center gap-4 overflow-auto">
+        <div className="flex h-full w-full flex-wrap items-center justify-center gap-4">
           {movies.results?.map((movie: MovieCardProps) => (
             <MovieCard
               onClick={() => openModal(movie.id as number)}
@@ -87,7 +87,11 @@ const Categories = () => {
             window.scrollTo({ top: 0, behavior: 'smooth' })
           }}
         />
-        <MovieModal id={movieId} onClose={() => setMovieId(0)} />
+        <MovieModal
+          id={movieId}
+          onClose={() => setMovieId(0)}
+          type={movies.media_type as 'movie' | 'tv'}
+        />
       </CategoriesLayout>
     </>
   )

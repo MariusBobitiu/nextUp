@@ -56,7 +56,7 @@ const Pagination: React.FC<PaginationProps> = ({
   }
 
   return (
-    <div className={`flex w-full items-center justify-center gap-4`}>
+    <div className={`mb-2 flex w-full items-center justify-center gap-4`}>
       <button
         className={`rounded-lg ${button_bg_color ? button_bg_color : 'bg-navy-400'} px-4 py-2 ${text_color ? text_color : 'text-light-blue-300'} hover:${button_bg_hover ? button_bg_hover : 'bg-navy-500'} disabled:opacity-25 disabled:hover:bg-navy-400 hover:${text_hover ? text_hover : 'text-light-blue-50'}`}
         onClick={() => onPageChange(currentPage - 1)}

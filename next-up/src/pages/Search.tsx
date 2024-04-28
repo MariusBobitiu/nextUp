@@ -96,17 +96,27 @@ const Search = () => {
     setMovieId(id)
   }
 
+  useEffect(() => {
+    const searchContainer = document.getElementById('search-container')
+    if (searchContainer) {
+      searchContainer.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }, [movies])
+
   if (isLoading) return <Loading />
   if (error)
     return <div className="w-full text-center">Error fetching movies!</div>
 
   return (
-    <main className="flex h-full w-full flex-col gap-4 overflow-hidden p-12">
+    <main className="flex h-[98%] w-full flex-col gap-4 overflow-hidden p-12">
       <Suspense fallback={<Loading />}>
         <div className="w-full">
           <SearchBar />
         </div>
-        <div className="mt-8 flex h-2/3 w-full flex-wrap items-center justify-center gap-4 overflow-auto">
+        <div
+          className="mt-8 flex h-4/5 w-full flex-wrap items-center justify-center gap-4 overflow-auto"
+          id="search-container"
+        >
           {movies.results?.map((movie: MovieCardProps) => (
             <MovieCard
               onClick={() =>

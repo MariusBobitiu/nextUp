@@ -1,4 +1,3 @@
-import nextUpIcon from '@/assets/nextUp - icon.svg'
 import { SiGithub as Github, SiLinkedin as LinkedIn } from 'react-icons/si'
 import Link from '@/components/common/Link'
 import NextUp from '@/components/common/NextUp'
@@ -38,16 +37,8 @@ const Navbar = () => {
 
       <ul className="flex items-center gap-4 text-sm font-medium text-white">
         <li className="hidden lg:block">
-          <a
-            href="https://nextup.mariusbobitiu.dev"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            <img
-              src={nextUpIcon}
-              alt="Xata logo"
-              className="w-6 transition-transform hover:scale-125 focus:scale-125"
-            />
+          <a href="/sign-in" className="hover:text-accent-teal">
+            Sign in
           </a>
         </li>
 

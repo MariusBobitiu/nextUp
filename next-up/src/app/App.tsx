@@ -13,6 +13,10 @@ import AiPoweredSearch from '@/pages/AiPoweredSearch'
 import Layout from '@/components/layout/Layout'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import Search from '@/pages/Search'
+import SignUp from '@/pages/SignUp'
+import SignIn from '@/pages/SignIn'
+import ForgotPassword from '@/pages/ForgotPassword'
+import ResetPassword from '@/pages/ResetPassword'
 
 const queryClient = new QueryClient()
 
@@ -23,9 +27,14 @@ const App = () => {
         <Router>
           <Layout>
             <Routes>
+              {/* HOME */}
               <Route path="/" element={<Home />} />
+
+              {/* SEARCH */}
               <Route path="/search" element={<Search />} />
-              <Route path="/?search=:searchTerm" element={<Home />} />
+              <Route path="/search?search=:searchTerm" element={<Search />} />
+
+              {/* CATEGORIES */}
               <Route path="/categories" element={<Categories />} />
               <Route
                 path="/categories/categories"
@@ -33,6 +42,15 @@ const App = () => {
               />
               <Route path="/categories/movie/:id" element={<MovieCategory />} />
               <Route path="/categories/tv/:id" element={<TVCategory />} />
+
+              {/* AUTHORIZATION */}
+              <Route path="/sign-up" element={<SignUp />} />
+              <Route path="/sign-in" element={<SignIn />} />
+              <Route path="/sign-out" element={<Navigate to="/" />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+
+              {/* LATER IMPLEMENTATION */}
               <Route path="/swiper" element={<Swiper />} />
               <Route path="/ai-powered-search" element={<AiPoweredSearch />} />
             </Routes>
