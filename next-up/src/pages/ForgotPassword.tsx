@@ -1,6 +1,6 @@
 import Input from '@/components/common/Input'
 import { ChangeEvent, useState } from 'react'
-import Scene from '@/assets/ForgotPasswordScene.png'
+import Scene from '@/assets/ForgotPassword-Laptop.svg'
 import Logo from '@/assets/nextUp - icon.svg'
 
 const ForgotPassword = () => {
@@ -23,8 +23,8 @@ const ForgotPassword = () => {
   return (
     <>
       <div className="flex h-full w-full items-center justify-center gap-16">
-        <div className="relative flex h-full w-3/5 items-center justify-center">
-          <div className="absolute z-0 h-3/5 w-3/5 rounded-full bg-navy-500 blur-lg" />
+        <div className="relative flex h-full w-2/5 items-center justify-center shadow-xl">
+          <div className="absolute z-0 h-3/5 w-4/5 rounded-full bg-navy-500 blur-lg" />
           <img
             src={Scene}
             alt="Forgot Password"
