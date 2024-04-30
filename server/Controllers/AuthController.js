@@ -20,6 +20,8 @@ const SignUp = async (req, res) => {
       withCredentials: true,
       httpOnly: true,
       maxAge: parseInt(process.env.COOKIE_EXPIRATION),
+      secure: true,
+      sameSite: "none",
     });
 
     console.log("User created successfully", JSON.stringify(user, null, 2));
@@ -63,6 +65,9 @@ const SignIn = async (req, res) => {
       res.cookie("token", token, {
         withCredentials: true,
         httpOnly: true,
+        maxAge: parseInt(process.env.COOKIE_EXPIRATION),
+        secure: true,
+        sameSite: "none",
       });
 
       res
@@ -88,6 +93,8 @@ const SignIn = async (req, res) => {
         withCredentials: true,
         httpOnly: true,
         maxAge: parseInt(process.env.COOKIE_EXPIRATION),
+        secure: true,
+        sameSite: "none",
       });
 
       return res
