@@ -4,6 +4,7 @@ import authRoute from "./Routes/AuthRoute.js";
 import movieRoute from "./Routes/MovieRoute.js";
 import userRoute from "./Routes/UserRoute.js";
 import connectDB from "./config/db.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
