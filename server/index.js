@@ -12,13 +12,13 @@ dotenv.config();
 connectDB();
 const app = express();
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 8081;
 
-const corsOptions = {
-  origin: "http://localhost:5173",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true,
-};
+// const corsOptions = {
+//   origin: "http://localhost:5173",
+//   methods: ["GET", "POST", "PUT", "DELETE"],
+//   credentials: true,
+// };
 
 app.use(cookieParser());
 app.use(cors(corsOptions));
@@ -30,6 +30,10 @@ app.use("/api/users", userRoute);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+});
+
+app.get("/", (req, res) => {
+  res.status(200).send({ message: "server is running" });
 });
 
 export default app;
