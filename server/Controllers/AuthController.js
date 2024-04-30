@@ -2,7 +2,7 @@ import User from "../Models/UserModel.js";
 import createSecretToken from "../util/SecretToken.js";
 import bcrypt from "bcrypt";
 
-const SignUp = async (req, res, next) => {
+const SignUp = async (req, res) => {
   try {
     const { email, username, password } = req.body;
 
@@ -15,22 +15,26 @@ const SignUp = async (req, res, next) => {
 
     const user = await User.create({ email, password, username });
     const token = createSecretToken(user._id);
+
     res.cookie("token", token, {
       withCredentials: true,
       httpOnly: true,
+      maxAge: parseInt(process.env.COOKIE_EXPIRATION),
     });
 
-    res
+    console.log("User created successfully", JSON.stringify(user, null, 2));
+    console.log("Token: ", token);
+
+    return res
       .status(201)
       .json({ message: "User created successfully", success: true, user });
-
-    next();
   } catch (err) {
     console.error(err);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
-const SignIn = async (req, res, next) => {
+const SignIn = async (req, res) => {
   try {
     const { email, username, password } = req.body;
 
@@ -63,9 +67,8 @@ const SignIn = async (req, res, next) => {
 
       res
         .status(200)
-        .json({ message: "User signed in successfully", success: true });
+        .json({ message: "User signed in successfully", success: true, user });
 
-      next();
     } else {
       // Username
       const user = await User.findOne({ username });
@@ -80,19 +83,21 @@ const SignIn = async (req, res, next) => {
       }
 
       const token = createSecretToken(user._id);
+      console.log(token);
       res.cookie("token", token, {
         withCredentials: true,
         httpOnly: true,
+        maxAge: parseInt(process.env.COOKIE_EXPIRATION),
       });
 
-      res
+      return res
         .status(200)
         .json({ message: "User signed in successfully", success: true });
 
-      next();
     }
   } catch (err) {
     console.error(err);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 

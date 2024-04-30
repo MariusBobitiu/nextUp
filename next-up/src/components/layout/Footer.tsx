@@ -13,12 +13,13 @@ const Footer = () => {
           />{' '}
           nextUp
         </span>
-        <span>
+        <span className='cursor-default'>
           Made with 🤍 by{' '}
           <a
             href="https://linkedin.com/in/marius-bobitiu"
             rel="noopener noreferrer"
             target="_blank"
+            className='hover:text-accent-teal focus:outline-none'
           >
             Marius Bobitiu
           </a>

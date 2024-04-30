@@ -1,7 +1,14 @@
+import { signIn, signUp } from '@/services/Auth'
 import Input from './common/Input'
 import { ChangeEvent, useState } from 'react'
+import { useDispatch } from 'react-redux';
+import { setUser } from '@/features/user/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 export const SignUpForm = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -19,12 +26,35 @@ export const SignUpForm = () => {
     }
   }
 
-  const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (formData.password !== formData.confirmPassword) {
       setError('password')
     }
-    console.log(formData)
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
+    if (!emailRegex.test(formData.email)) {
+      setError('email')
+    }
+    if (formData.username.length < 3) {
+      setError('username')
+    }
+    if (error === null) {
+      console.log(formData);
+      const response = await signUp(formData);
+      if(!response.success) {
+        console.error(response);
+      }
+
+      setFormData({
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+      });
+
+      dispatch(setUser(response.user));
+      navigate('/');
+    }
   }
 
   return (
@@ -125,6 +155,9 @@ export const SignInForm = () => {
   })
   const [error, setError] = useState<'email' | 'password' | null>(null)
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
     if (error === e.target.name) {
@@ -132,9 +165,30 @@ export const SignInForm = () => {
     }
   }
 
-  const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log(formData)
+    if (formData.email === '') {
+      setError('email')
+    }
+    if (formData.password === '') {
+      setError('password')
+    }
+    if (error === null) {
+      const response = await signIn(formData);
+      if(!response.success) {
+        console.error(response);
+      }
+
+      setFormData({
+        email: '',
+        password: '',
+      });
+
+      console.log(response);
+
+      dispatch(setUser(response.user));
+      navigate('/');
+    }
   }
 
   return (

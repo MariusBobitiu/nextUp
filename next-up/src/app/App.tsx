@@ -17,6 +17,8 @@ import SignUp from '@/pages/SignUp'
 import SignIn from '@/pages/SignIn'
 import ForgotPassword from '@/pages/ForgotPassword'
 import ResetPassword from '@/pages/ResetPassword'
+import SignOut from '@/pages/SignOut'
+import Profile from '@/pages/Profile'
 
 const queryClient = new QueryClient()
 
@@ -46,9 +48,12 @@ const App = () => {
               {/* AUTHORIZATION */}
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/sign-in" element={<SignIn />} />
-              <Route path="/sign-out" element={<Navigate to="/" />} />
+              <Route path="/sign-out" element={<SignOut />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+
+              {/* USER */}
+              <Route path='/profile' element={<Profile />} />
 
               {/* LATER IMPLEMENTATION */}
               <Route path="/swiper" element={<Swiper />} />

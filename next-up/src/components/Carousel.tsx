@@ -92,28 +92,28 @@ const Carousel = () => {
         }}
         className="mySwiper"
       >
-        {movies.results?.map((movie: MovieCardProps) => (
-          <SwiperSlide
-            key={movie.title}
-            onClick={() =>
-              openModal(movie.id as number, movie.media_type as 'movie' | 'tv')
-            }
-          >
-            <img
-              src={
-                movie.backdrop_path
-                  ? `${import.meta.env.VITE_TMDB_IMAGE_BASE_URL}/${movie.backdrop_path}`
-                  : movie.poster_path
-                    ? `${import.meta.env.VITE_TMDB_IMAGE_BASE_URL}/${movie.poster_path}`
-                    : placeholder
+        {movies.results?.map((movie: MovieCardProps, index: number) => (
+            <SwiperSlide
+            key={index}
+              onClick={() =>
+                openModal(movie.id as number, movie.media_type as 'movie' | 'tv')
               }
-              alt={movie.title}
-              className="absolute left-[50%] top-[50%] z-0 h-[95%] w-[95%] -translate-x-1/2 -translate-y-1/2 rounded-lg bg-center object-cover brightness-75 transition-all duration-500 ease-in-out"
-            />
-            <p className="absolute bottom-4 left-0 z-10 w-full text-center text-3xl">
-              {movie.title ? movie.title : movie.name}
-            </p>
-          </SwiperSlide>
+            >
+              <img
+                src={
+                  movie.backdrop_path
+                    ? `${import.meta.env.VITE_TMDB_IMAGE_BASE_URL}/${movie.backdrop_path}`
+                    : movie.poster_path
+                      ? `${import.meta.env.VITE_TMDB_IMAGE_BASE_URL}/${movie.poster_path}`
+                      : placeholder
+                }
+                alt={movie.title}
+                className="absolute left-[50%] top-[50%] z-0 h-[95%] w-[95%] -translate-x-1/2 -translate-y-1/2 rounded-lg bg-center object-cover brightness-75 transition-all duration-500 ease-in-out"
+              />
+              <p className="absolute bottom-4 left-0 z-10 w-full text-center text-3xl">
+                {movie.title ? movie.title : movie.name}
+              </p>
+            </SwiperSlide>
         ))}
       </Swiper>
       <MovieModal type={movieType} id={movieId} onClose={() => setMovieId(0)} />
