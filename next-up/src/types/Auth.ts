@@ -1,3 +1,5 @@
+import { MovieProps } from '@/types/MovieCard';
+
 export type SignUpData = {
     username: string;
     email: string;
@@ -19,6 +21,7 @@ export type userState = {
             password: string;
             profilePicture: string;
             createdAt: string;
+            watchList: MovieProps[];
         }
     };
 };

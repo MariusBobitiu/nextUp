@@ -50,10 +50,13 @@ const App = () => {
               <Route path="/sign-in" element={<SignIn />} />
               <Route path="/sign-out" element={<SignOut />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route
+                path="/reset-password/:token"
+                element={<ResetPassword />}
+              />
 
               {/* USER */}
-              <Route path='/profile' element={<Profile />} />
+              <Route path="/profile" element={<Profile />} />
 
               {/* LATER IMPLEMENTATION */}
               <Route path="/swiper" element={<Swiper />} />

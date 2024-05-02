@@ -14,17 +14,36 @@ const ForgotPassword = () => {
 
   const sendResetLink = () => {
     setIsLoading(true)
-    setResetLinkSent(true)
-    setTimeout(() => {
+    const sendResetLink = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_SV_API_BASE_URL}/users/forgot-password`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }),
+          }
+        )
+        if (response.ok) {
+          setResetLinkSent(true)
+        } else {
+          throw new Error('Failed to send reset link')
+        }
+      } catch (error) {
+        console.error(error)
+      }
       setIsLoading(false)
-    }, 2000)
+    }
+    sendResetLink()
   }
 
   return (
     <>
       <div className="flex h-full w-full items-center justify-center gap-16">
         <div className="relative flex h-full w-2/5 items-center justify-center shadow-xl">
-          <div className="absolute z-0 h-3/5 w-4/5 rounded-full bg-navy-500 blur-lg" />
+          <div className="absolute z-0 h-2/5 w-3/5 rounded-full bg-navy-500 blur-2xl" />
           <img
             src={Scene}
             alt="Forgot Password"

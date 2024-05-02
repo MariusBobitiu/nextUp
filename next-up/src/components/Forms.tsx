@@ -1,13 +1,13 @@
 import { signIn, signUp } from '@/services/Auth'
 import Input from './common/Input'
 import { ChangeEvent, useState } from 'react'
-import { useDispatch } from 'react-redux';
-import { setUser } from '@/features/user/userSlice';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux'
+import { setUser } from '@/features/user/userSlice'
+import { useNavigate } from 'react-router-dom'
 
 export const SignUpForm = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     username: '',
@@ -39,10 +39,11 @@ export const SignUpForm = () => {
       setError('username')
     }
     if (error === null) {
-      console.log(formData);
-      const response = await signUp(formData);
-      if(!response.success) {
-        console.error(response);
+      console.log(formData)
+      const response = await signUp(formData)
+      if (!response.success) {
+        console.error(response)
+        return
       }
 
       setFormData({
@@ -50,10 +51,10 @@ export const SignUpForm = () => {
         email: '',
         password: '',
         confirmPassword: '',
-      });
+      })
 
-      dispatch(setUser(response.user));
-      navigate('/');
+      dispatch(setUser(response.user))
+      navigate('/')
     }
   }
 
@@ -155,8 +156,8 @@ export const SignInForm = () => {
   })
   const [error, setError] = useState<'email' | 'password' | null>(null)
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -174,20 +175,21 @@ export const SignInForm = () => {
       setError('password')
     }
     if (error === null) {
-      const response = await signIn(formData);
-      if(!response.success) {
-        console.error(response);
+      const response = await signIn(formData)
+      if (!response.success) {
+        console.error('Sign in failed', response)
+        return
       }
 
       setFormData({
         email: '',
         password: '',
-      });
+      })
 
-      console.log(response);
+      console.log(response)
 
-      dispatch(setUser(response.user));
-      navigate('/');
+      dispatch(setUser(response.user))
+      navigate('/')
     }
   }
 
