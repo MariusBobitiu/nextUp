@@ -67,35 +67,43 @@ const ResetPassword = async (req, res) => {
 
   if (!token) {
     return res.status(401).json({ message: 'Authentication error' });
+    console.log("Authentication error");
   }
 
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
       if (err) {
-        
         return res.status(401).json({ message: 'Token expired or invalid' });
+        console.log("Token expired or invalid");
       }
 
       try {
         const user = await User.findOne({ resetLink: token });
+        console.log("User found: ", user)
 
         if (!user) {
           return res.status(404).json({ message: 'User not found' });
+          console.log("User not found");
         }
 
+        console.log("New password: ", newPassword)
         const hashPassword = await bcrypt.hash(newPassword, 10);
+        console.log("Hashed password: ", hashPassword)
         user.password = hashPassword;
         user.resetLink = '';
 
         await user.save();
+        console.log("Password reset successfully")
 
         return res.status(200).json({ message: 'Password reset successfully' });
       } catch (error) {
         return res.status(500).json({ error: error.message });
+        console.log("Error resetting password: ", error.message)
       }
     });
   } else {
     return res.status(401).json({ message: 'Authentication error' });
+    console.log("Authentication error");
   }
 }
 
