@@ -19,6 +19,7 @@ import ForgotPassword from '@/pages/ForgotPassword'
 import ResetPassword from '@/pages/ResetPassword'
 import SignOut from '@/pages/SignOut'
 import Profile from '@/pages/Profile'
+import MovieDetails from '@/pages/MovieDetails'
 
 const queryClient = new QueryClient()
 
@@ -54,6 +55,10 @@ const App = () => {
                 path="/reset-password/:token"
                 element={<ResetPassword />}
               />
+
+              {/* Movie/TV Details */}
+              <Route path="/movie/:slug" element={<MovieDetails />} />
+              <Route path="/tv/:slug" element={<TvDetails />} />
 
               {/* USER */}
               <Route path="/profile" element={<Profile />} />
