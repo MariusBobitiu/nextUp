@@ -86,11 +86,8 @@ const ResetPassword = async (req, res) => {
           return res.status(404).json({ message: 'User not found' });
         }
 
-        const hashPassword = await bcrypt.hash(newPassword, parseInt(process.env.SALT_ROUNDS) || 10);
-        user.password = hashPassword;
+        user.password = newPassword;
         user.resetLink = '';
-
-        console.log(`Hashed password: ${hashPassword}, user password: ${user.password}`);
 
         await user.save();
         console.log("Password reset successfully");
@@ -147,8 +144,7 @@ const UpdatePassword = async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    const hashPassword = await bcrypt.hash(newPassword, parseInt(process.env.SALT_ROUNDS) || 10);
-    user.password = hashPassword;
+    user.password = newPassword;
 
     await user.save();
 
