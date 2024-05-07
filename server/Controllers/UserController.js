@@ -66,8 +66,8 @@ const ResetPassword = async (req, res) => {
   const {token, newPassword } = req.body;
 
   if (!token) {
-    return res.status(401).json({ message: 'Authentication error' });
     console.log("Authentication error");
+    return res.status(401).json({ message: 'Authentication error' });
   }
 
   if (token) {
@@ -82,26 +82,28 @@ const ResetPassword = async (req, res) => {
         console.log("User found: ", user)
 
         if (!user) {
-          return res.status(404).json({ message: 'User not found' });
           console.log("User not found");
+          return res.status(404).json({ message: 'User not found' });
         }
 
-        const hashPassword = await bcrypt.hash(newPassword, 10);
+        const hashPassword = await bcrypt.hash(newPassword, parseInt(process.env.SALT_ROUNDS) || 10);
         user.password = hashPassword;
         user.resetLink = '';
 
+        console.log(`Hashed password: ${hashPassword}, user password: ${user.password}`);
+
         await user.save();
-        console.log("Password reset successfully")
+        console.log("Password reset successfully");
 
         return res.status(200).json({ message: 'Password reset successfully' });
       } catch (error) {
-        return res.status(500).json({ error: error.message });
         console.log("Error resetting password: ", error.message)
+        return res.status(500).json({ error: error.message });
       }
     });
   } else {
-    return res.status(401).json({ message: 'Authentication error' });
     console.log("Authentication error");
+    return res.status(401).json({ message: 'Authentication error' });
   }
 }
 
