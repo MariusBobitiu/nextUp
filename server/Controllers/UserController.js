@@ -73,8 +73,8 @@ const ResetPassword = async (req, res) => {
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
       if (err) {
-        return res.status(401).json({ message: 'Token expired or invalid' });
         console.log("Token expired or invalid");
+        return res.status(401).json({ message: 'Token expired or invalid' });
       }
 
       try {
@@ -86,9 +86,7 @@ const ResetPassword = async (req, res) => {
           console.log("User not found");
         }
 
-        console.log("New password: ", newPassword)
         const hashPassword = await bcrypt.hash(newPassword, 10);
-        console.log("Hashed password: ", hashPassword)
         user.password = hashPassword;
         user.resetLink = '';
 
