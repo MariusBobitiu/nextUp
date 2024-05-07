@@ -65,9 +65,14 @@ const VerifyToken = async (req, res) => {
 const ResetPassword = async (req, res) => {
   const {token, newPassword } = req.body;
 
+  if (!token) {
+    return res.status(401).json({ message: 'Authentication error' });
+  }
+
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
       if (err) {
+        
         return res.status(401).json({ message: 'Token expired or invalid' });
       }
 
