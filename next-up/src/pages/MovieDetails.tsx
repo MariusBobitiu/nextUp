@@ -1,5 +1,5 @@
 import Loading from '@/components/layout/Loading'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PiArrowFatLinesRightFill as ArrowRightIcon } from 'react-icons/pi'
 import { useQuery } from 'react-query'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -17,6 +17,8 @@ import {
   fetchImages,
   fetchVideos,
   fetchReviews,
+  fetchSimilarMovies,
+  fetchRecommendations,
 } from '@/services/fetchData'
 import getLanguage from '@/services/getLanguage'
 import MoviePlayerModal from '@/components/MoviePlayerModal'
@@ -26,13 +28,18 @@ import { Review } from '@/types/MovieDetails'
 
 const MovieDetails = () => {
   const { slug } = useParams()
-  const movieId = slug?.split('-').reverse().pop()
+  const [movieId, setMovieId] = useState('')
   const [bookmarked, setBookmarked] = useState(false)
   const [activeMedia, setActiveMedia] = useState('images')
   const [videoTitle, setVideoTitle] = useState('')
   const [videoKey, setVideoKey] = useState('')
+  const [activeSection, setActiveSection] = useState('similar')
 
   const navigate = useNavigate()
+
+  useEffect(() => {
+    setMovieId(slug?.split('-')[0] || '')
+  }, [slug])
 
   const {
     data: movie,
@@ -79,6 +86,20 @@ const MovieDetails = () => {
   const { data: reviews } = useQuery(
     'reviews',
     () => fetchReviews(movieId || ''),
+    {
+      enabled: !!movieId,
+    }
+  )
+  const { data: similarMovies } = useQuery(
+    'similarMovies',
+    () => fetchSimilarMovies(movieId || ''),
+    {
+      enabled: !!movieId,
+    }
+  )
+  const { data: recomm } = useQuery(
+    'recommendations',
+    () => fetchRecommendations(movieId || ''),
     {
       enabled: !!movieId,
     }
@@ -152,14 +173,19 @@ const MovieDetails = () => {
                         result.iso_3166_1 === 'GB'
                     )?.release_dates[0].release_date ? (
                       <p className="flex gap-2 text-xl">
-                        <span className="border border-light-blue-300 px-1">
-                          {
-                            releaseDate?.results?.find(
-                              (result: { iso_3166_1: string }) =>
-                                result.iso_3166_1 === 'GB'
-                            )?.release_dates[0].certification
-                          }
-                        </span>
+                        {releaseDate?.results.find(
+                          (result: { iso_3166_1: string }) =>
+                            result.iso_3166_1 === 'GB'
+                        )?.release_dates[0].certification ? (
+                          <span className="border border-light-blue-300 px-1">
+                            {
+                              releaseDate?.results?.find(
+                                (result: { iso_3166_1: string }) =>
+                                  result.iso_3166_1 === 'GB'
+                              )?.release_dates[0].certification
+                            }
+                          </span>
+                        ) : null}
                         {releaseDate?.results
                           ?.find(
                             (result: { iso_3166_1: string }) =>
@@ -187,12 +213,12 @@ const MovieDetails = () => {
                     <p className="text-lg">{formatDuration()}</p>
                   </div>
                   <a
-                    href={`#player-${trailer.name}-${trailer.key}`}
+                    href={`#player-${trailer?.key}-${trailer?.name}`}
                     rel="noreferrer"
                     className="text-xl text-accent-teal hover:text-accent-teal-700"
                     onClick={() => {
-                      setVideoTitle(trailer.name)
-                      setVideoKey(trailer.key)
+                      setVideoTitle(trailer?.name)
+                      setVideoKey(trailer?.key)
                     }}
                   >
                     <PlayIcon className="-mt-1 mr-2 inline-block text-lg" />
@@ -202,6 +228,7 @@ const MovieDetails = () => {
               </div>
               <div className="mb-20 flex w-full items-start justify-between gap-2 p-4 pt-0">
                 <div className="w-3/4">
+                  <h2 className="mb-4 text-3xl font-bold">Top Billed Cast: </h2>
                   <div className="max-w-4/5 flex items-start justify-start gap-4 overflow-x-auto pb-4">
                     {credits?.cast
                       .slice(0, 10)
@@ -247,7 +274,7 @@ const MovieDetails = () => {
                     See full cast and crew{' '}
                     <ArrowRightIcon className="-mt-1 inline-block" />
                   </button>
-                  <div className="flex w-full flex-col">
+                  <div className="mt-8 flex w-full flex-col">
                     <div className="flex gap-6 text-xl">
                       <h2 className="mr-16 text-3xl font-bold">Media </h2>
                       <button
@@ -312,7 +339,7 @@ const MovieDetails = () => {
                                     alt={movie.title}
                                   />
                                   <a
-                                    href={`#player-${video.name}-${video.id}`}
+                                    href={`#player-${video.id}-${video.name}`}
                                     rel="noreferrer"
                                     className="absolute left-0 top-0 flex h-full w-full items-center justify-center text-light-blue-200 hover:text-accent-teal"
                                     onClick={() => {
@@ -362,9 +389,9 @@ const MovieDetails = () => {
                         </>
                       )}
                     </div>
-                    <div className="mt-4 flex flex-col items-start justify-start gap-4">
+                    <div className="mt-8 flex flex-col items-start justify-start gap-4">
                       <h2 className="text-3xl font-bold">Reviews: </h2>
-                      {reviews.results.length > 0 ? (
+                      {reviews?.results.length > 0 ? (
                         <>
                           <div className="flex max-h-96 w-full flex-col gap-4 overflow-y-auto">
                             {reviews?.results.map((review: Review) => (
@@ -378,6 +405,92 @@ const MovieDetails = () => {
                       ) : (
                         <p className="text-lg">No reviews available</p>
                       )}
+                    </div>
+                    <div className="mt-8 flex flex-col gap-4">
+                      <div className="flex items-center justify-start gap-8">
+                        <button
+                          className={`text-3xl font-medium hover:text-light-blue-50 ${activeSection === 'similar' ? 'border-b border-accent-teal' : ''}`}
+                          onClick={() => setActiveSection('similar')}
+                        >
+                          Similar Movies
+                        </button>
+                        <button
+                          className={`text-3xl font-medium hover:text-light-blue-50 ${activeSection === 'recommendations' ? 'border-b border-accent-teal' : ''}`}
+                          onClick={() => setActiveSection('recommendations')}
+                        >
+                          Recommendations
+                        </button>
+                      </div>
+                      <div className="flex w-full items-center justify-start gap-4 overflow-x-auto">
+                        {activeSection === 'similar' &&
+                          similarMovies?.results.map(
+                            (movie: {
+                              id: number
+                              backdrop_path: string
+                              title: string
+                              release_date: string
+                              vote_average: number
+                            }) => (
+                              <div
+                                key={movie.id}
+                                className="flex min-w-96 flex-col items-start justify-start rounded-lg pb-2"
+                                onClick={() =>
+                                  navigate(
+                                    `/movie/${movie.id}-${movie.title.toLowerCase().split(' ').join('-')}`
+                                  )
+                                }
+                              >
+                                <img
+                                  className="h-52 w-96 rounded-lg object-cover"
+                                  src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
+                                  alt={movie.title}
+                                />
+                                <div className="flex w-full items-center justify-between gap-2 px-2">
+                                  <h3 className="text-lg font-bold">
+                                    {movie.title}
+                                  </h3>
+                                  <p className="text-sm">
+                                    ⭐ {movie.vote_average}
+                                  </p>
+                                </div>
+                              </div>
+                            )
+                          )}
+                        {activeSection === 'recommendations' &&
+                          recomm?.results.map(
+                            (movie: {
+                              id: number
+                              backdrop_path: string
+                              title: string
+                              release_date: string
+                              vote_average: number
+                            }) => (
+                              <div
+                                key={movie.id}
+                                className="flex min-w-96 flex-col items-start justify-start rounded-lg pb-2"
+                                onClick={() =>
+                                  navigate(
+                                    `/movie/${movie.id}-${movie.title.toLowerCase().split(' ').join('-')}`
+                                  )
+                                }
+                              >
+                                <img
+                                  className="h-52 w-96 rounded-lg object-cover"
+                                  src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
+                                  alt={movie.title}
+                                />
+                                <div className="flex w-full items-center justify-between gap-2 px-2">
+                                  <h3 className="text-lg font-bold">
+                                    {movie.title}
+                                  </h3>
+                                  <p className="text-sm">
+                                    ⭐ {movie.vote_average}
+                                  </p>
+                                </div>
+                              </div>
+                            )
+                          )}
+                      </div>
                     </div>
                   </div>
                 </div>

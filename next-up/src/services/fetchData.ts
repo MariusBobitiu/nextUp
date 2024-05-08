@@ -88,3 +88,29 @@ export const fetchReviews = async (movieId: string) => {
     const data = await res.json()
     return data
 }
+
+export const fetchSimilarMovies = async (movieId: string) => {
+    const apiUrl = `${import.meta.env.VITE_TMDB_API_BASE_URL}/movie/${movieId}/similar?api_key=${import.meta.env.VITE_TMDB_API_KEY}`
+    console.log('Fetching similar movies from:', apiUrl)
+
+    const res = await fetch(apiUrl)
+    if (!res.ok) {
+        throw new Error('Network response was not ok ' + res.status)
+    }
+
+    const data = await res.json()
+    return data
+}
+
+export const fetchRecommendations = async (movieId: string) => {
+    const apiUrl = `${import.meta.env.VITE_TMDB_API_BASE_URL}/movie/${movieId}/recommendations?api_key=${import.meta.env.VITE_TMDB_API_KEY}`
+    console.log('Fetching recommended movies from:', apiUrl)
+
+    const res = await fetch(apiUrl)
+    if (!res.ok) {
+        throw new Error('Network response was not ok ' + res.status)
+    }
+
+    const data = await res.json()
+    return data
+}

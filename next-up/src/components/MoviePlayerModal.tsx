@@ -21,16 +21,10 @@ const MoviePlayerModal = ({
       const hash = window.location.hash
       if (hash.startsWith('#player-')) {
         setIsOpen(true)
-        if (videoKey === '' || videoTitle === '') {
-          setVideoTitle(hash.split('-')[1].replace(/%20/g, ' '))
-          setVideoKey(hash.split('-')[2])
-        }
       } else {
         setIsOpen(false)
       }
     }
-
-    console.log(videoTitle, videoKey)
     // Listen for hash changes
     window.addEventListener('hashchange', handleHashChange, false)
 
@@ -41,7 +35,11 @@ const MoviePlayerModal = ({
     return () => {
       window.removeEventListener('hashchange', handleHashChange, false)
     }
-  }, [])
+  }, [setVideoKey, videoKey, videoTitle])
+
+  useEffect(() => {
+    console.log(videoKey, videoTitle)
+  }, [videoKey, videoTitle])
 
   return (
     <div>
