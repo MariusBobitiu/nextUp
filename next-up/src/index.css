@@ -12,10 +12,10 @@ html {
 }
 
 ::-webkit-scrollbar {
-  @apply w-2;
+  @apply w-2 h-2;
 }
 ::-webkit-scrollbar-thumb {
-  @apply rounded-lg bg-light-blue-600;
+  @apply rounded-lg bg-light-blue-600 w-1;
 }
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-light-blue-500;
@@ -72,4 +72,11 @@ html {
 
 .swiper-pagination-bullet-active {
   background: #0fa985;
+}
+
+.clamp-7-lines {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 7;
+  overflow: hidden;
 }

@@ -20,10 +20,16 @@ import ResetPassword from '@/pages/ResetPassword'
 import SignOut from '@/pages/SignOut'
 import Profile from '@/pages/Profile'
 import MovieDetails from '@/pages/MovieDetails'
+import TvDetails from '@/pages/TvDetails'
+import MovieDetailsCast from '@/pages/MovieDetailsCast'
+import MovieDetailsVideo from '@/pages/MovieDetailsVideo'
+import MovieDetailsImages from '@/pages/MovieDetailsImages'
+import MovieDetailsPosters from '@/pages/MovieDetailsPosters'
 
 const queryClient = new QueryClient()
 
 const App = () => {
+  
   return (
     <>
       <QueryClientProvider client={queryClient}>
@@ -59,6 +65,10 @@ const App = () => {
               {/* Movie/TV Details */}
               <Route path="/movie/:slug" element={<MovieDetails />} />
               <Route path="/tv/:slug" element={<TvDetails />} />
+              <Route path="/movie/:slug/cast" element={<MovieDetailsCast />} />
+              <Route path='/movie/:slug/videos' element={<MovieDetailsVideo />} />
+              <Route path='/movie/:slug/images' element={<MovieDetailsImages />} />
+              <Route path='/movie/:slug/posters' element={<MovieDetailsPosters />} />
 
               {/* USER */}
               <Route path="/profile" element={<Profile />} />
