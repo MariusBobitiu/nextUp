@@ -7,7 +7,7 @@ import { userState } from '@/types/Auth'
 import { IoMdArrowDropdown as DropdownIcon } from "react-icons/io";
 import { FaRegUser as ProfileIcon } from "react-icons/fa";
 import { BiLogOut as LogoutIcon } from "react-icons/bi"; 
- import { IoIosSettings as SettingsIcon } from "react-icons/io";
+import { IoIosSettings as SettingsIcon } from "react-icons/io"; 
 
 // type Props = {}
 

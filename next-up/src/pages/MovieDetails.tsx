@@ -97,7 +97,7 @@ const MovieDetails = () => {
       enabled: !!movieId,
     }
   )
-  const { data: recomm } = useQuery(
+  const { data: recommendations } = useQuery(
     'recommendations',
     () => fetchRecommendations(movieId || ''),
     {
@@ -140,10 +140,10 @@ const MovieDetails = () => {
                 alt={movie.title}
               />
             </div>
-            <div className="absolute left-0 top-0 z-10 h-96 w-full bg-gradient-to-br from-navy-600 via-navy-800 to-navy-600 opacity-60"></div>
+            <div className="absolute left-0 top-0 z-10 h-96 w-full bg-gradient-to-r from-navy-800 via-navy-800/40 to-navy-800"></div>
             <div className="relative z-10 flex w-full flex-col items-start justify-center">
               <div className="flex w-full items-center justify-between p-12 pt-24">
-                <div className="flex justify-center">
+                <div className="flex justify-center relative">
                   <img
                     className="h-80 w-52 rounded-lg object-cover shadow-lg"
                     src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -215,7 +215,7 @@ const MovieDetails = () => {
                   <a
                     href={`#player-${trailer?.key}-${trailer?.name}`}
                     rel="noreferrer"
-                    className="text-xl text-accent-teal hover:text-accent-teal-700"
+                    className="text-xl text-accent-teal hover:text-accent-teal-600 transition-all ease-in-out duration-300"
                     onClick={() => {
                       setVideoTitle(trailer?.name)
                       setVideoKey(trailer?.key)
@@ -457,7 +457,7 @@ const MovieDetails = () => {
                             )
                           )}
                         {activeSection === 'recommendations' &&
-                          recomm?.results.map(
+                          recommendations?.results.map(
                             (movie: {
                               id: number
                               backdrop_path: string
