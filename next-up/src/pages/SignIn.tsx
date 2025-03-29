@@ -13,9 +13,9 @@ const SignIn = () => {
     <>
       <div className="h-full w-full rounded-xl px-20">
         <div className="flex h-full w-full items-center justify-center pb-24">
-          <div className="absolute left-0 top-0 z-30 h-full w-full rounded-xl bg-gradient-to-br from-navy-800/90 to-navy-600/5 pointer-events-none" />
+          <div className="absolute left-0 top-0 z-30 h-full w-full rounded-xl bg-gradient-to-br from-secondary-800/90 to-secondary-700/5 pointer-events-none" />
           <div className="flex flex-1 items-center justify-center rounded-xl pb-12">
-            <div className="absolute left-[26.5%] top-[60%] z-0 h-1/3 w-1/4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-navy-400 blur-2xl" />
+            <div className="absolute left-[26.5%] top-[60%] z-0 h-1/3 w-1/4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-secondary-700 blur-2xl" />
             <img
               src={scene}
               alt="Sign Up"

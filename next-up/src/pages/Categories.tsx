@@ -18,7 +18,7 @@ const Categories = () => {
     const searchParams = new URLSearchParams(location.search)
     const page = parseInt(searchParams.get('page') || '1', 10)
     setPage(page)
-  }, [location.search])
+  }, [])
 
   const fetchMovies = async (page: number) => {
     const apiUrl = `${import.meta.env.VITE_TMDB_API_BASE_URL}/movie/top_rated?language=en-UK&page=${page}&api_key=${import.meta.env.VITE_TMDB_API_KEY}`
@@ -55,21 +55,20 @@ const Categories = () => {
   if (error)
     return <div className="w-full text-center">Error fetching categories!</div>
 
-  const openModal = (id: number) => {
-    console.log(`Opening Modal for id: ${id}`)
+  const openModal = (id: number) => () => {
     setMovieId(id)
   }
 
   return (
     <>
       <CategoriesLayout>
-        <h1 className="text-3xl font-bold text-light-blue-100">
+        <h1 className="text-3xl font-bold text-primary-100">
           Top Rated Movies
         </h1>
         <div className="flex h-full w-full flex-wrap items-center justify-center gap-4">
           {movies.results?.map((movie: MovieCardProps) => (
             <MovieCard
-              onClick={() => openModal(movie.id as number)}
+              onClick={openModal(movie.id as number)}
               key={movie.id}
               title={movie.title || movie.name || ''}
               overview={movie.overview}
@@ -86,11 +85,16 @@ const Categories = () => {
             handlePageChange(newPage)
             window.scrollTo({ top: 0, behavior: 'smooth' })
           }}
+          button_bg_color='bg-gradient-to-b from-accent-400 to-accent-700'
+          text_color='text-primary-100'
+          button_bg_hover='brightness-90'
+          button_bg_active='brightness-75'
+          page_bg_hover='bg-secondary-700'
         />
         <MovieModal
           id={movieId}
           onClose={() => setMovieId(0)}
-          type={movies.media_type as 'movie' | 'tv'}
+          type={'movie'}
         />
       </CategoriesLayout>
     </>

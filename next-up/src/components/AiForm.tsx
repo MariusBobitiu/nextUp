@@ -16,7 +16,7 @@ const AiForm = () => {
           name="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className="block w-full rounded-2xl border border-navy-700 bg-navy-600 p-4 pb-16 pl-10 text-sm text-white placeholder-gray-400 outline-none focus:border-accent-teal-500"
+          className="block w-full rounded-2xl border border-secondary-800 bg-secondary-700 p-4 pb-16 pl-10 text-sm text-white placeholder-gray-400 outline-none focus:border-accent-teal-500"
           required
           rows={7}
         />
@@ -24,7 +24,7 @@ const AiForm = () => {
           <AudioRecorder />
           <button
             type="submit"
-            className="rounded-xl bg-accent-teal px-4 py-2 text-sm font-medium text-white hover:bg-accent-teal-700 focus:outline-none focus:ring-4 focus:ring-accent-teal-800"
+            className="rounded-xl bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-700 focus:outline-none focus:ring-4 focus:ring-accent-teal-800"
           >
             Submit
           </button>

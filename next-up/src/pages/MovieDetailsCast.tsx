@@ -1,6 +1,6 @@
 import Loading from "@/components/layout/Loading"
 import { useQuery } from "react-query"
-import { fetchMovie, fetchCredits } from '@/services/fetchData'
+import { fetchMovie, fetchCredits } from '@/lib/fetchData'
 import { useParams } from "react-router-dom"
 import placeholder from '@/assets/userPlaceholder.png'
 import CrewList from "@/components/CrewList"
@@ -23,8 +23,8 @@ const MovieDetailsCast = () => {
 
     return (
     <>
-        <div className='container px-12 py-4 flex flex-col gap-8'>
-            <div className='w-full flex justify-start items-center gap-8 bg-navy-600 rounded-lg px-12 py-4'>
+        <div className='container mx-auto px-12 py-4 flex flex-col gap-8'>
+            <div className='w-full flex justify-start items-center gap-8 bg-secondary-700 rounded-lg px-12 py-4'>
                 {movie.poster_path && (
                     <img
                         src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -41,7 +41,7 @@ const MovieDetailsCast = () => {
                         </span>
                     </h1>
                     <button
-                        className="font-semibold py-2 pr-4 text-xl hover:text-light-blue-500"
+                        className="font-semibold py-2 pr-4 text-xl hover:text-primary-500"
                         onClick={() => window.location.replace(`/movie/${movieId}-${movie.title.toLowerCase().split(' ').join('-')}`)}
                     >
                         <ArrowBackIcon className='inline-block -mt-1' /> Back to main
@@ -52,19 +52,21 @@ const MovieDetailsCast = () => {
                 <div className='w-1/2 flex flex-col items-start gap-4 px-4'>
                 <h3 className='text-3xl font-semibold'>Cast ● <span className='text-3xl font-light'>
                     {credits.cast.length}</span></h3>
-                    {credits.cast.map((actor: {id: number; profile_path: string; name: string; character: string;}) => (
-                        <div key={actor.id} className='flex items-center'>
-                            <img
-                                src={actor.profile_path != null ? `${import.meta.env.VITE_TMDB_IMAGE_BASE_URL}/${actor.profile_path}` : placeholder}
-                                alt={actor.name}
-                                className='w-20 h-20 rounded-xl object-cover'
-                            />
-                            <div className='ml-4'>
-                                <h2 className='text-lg font-semibold'>{actor.name}</h2>
-                                <p className='text-sm'>{actor.character}</p>
+                    <div className="grid grid-cols-2 gap-2 w-full">
+                        {credits.cast.map((actor: {id: number; profile_path: string; name: string; character: string;}) => (
+                            <div key={actor.id} className='flex items-center'>
+                                <img
+                                    src={actor.profile_path != null ? `${import.meta.env.VITE_TMDB_IMAGE_BASE_URL}/${actor.profile_path}` : placeholder}
+                                    alt={actor.name}
+                                    className='w-20 h-20 rounded-xl object-cover'
+                                />
+                                <div className='ml-4'>
+                                    <h2 className='text-lg font-semibold'>{actor.name}</h2>
+                                    <p className='text-sm'>{actor.character}</p>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
                 <div className='w-1/2 flex flex-col items-start gap-4 px-4'>
                     <h3 className='text-3xl font-semibold'>Crew ● <span className='text-3xl font-light'>{credits.crew.length}</span></h3>

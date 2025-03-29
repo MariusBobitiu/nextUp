@@ -3,28 +3,33 @@
 @tailwind utilities;
 
 html {
-  @apply bg-navy-700;
+  @apply bg-secondary-800;
   scroll-behavior: smooth;
 }
 
 #root {
-  @apply h-dvh w-full overflow-hidden bg-gradient-to-b from-navy-800 to-navy-700 font-body text-light-blue-300;
+  @apply h-full w-full overflow-hidden font-body text-primary-300 flex flex-col justify-normal items-start gap-1;
+}
+
+body {
+  @apply bg-secondary-800 h-dvh w-dvw overflow-hidden;
+  scroll-behavior: smooth;
 }
 
 ::-webkit-scrollbar {
   @apply w-2 h-2;
 }
 ::-webkit-scrollbar-thumb {
-  @apply rounded-lg bg-light-blue-600 w-1;
+  @apply rounded-lg bg-primary-600 w-1;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-light-blue-500;
+  @apply bg-primary-500;
 }
 ::-webkit-scrollbar-thumb:active {
-  @apply bg-light-blue-400;
+  @apply bg-primary-400;
 }
 ::-webkit-scrollbar-track {
-  @apply bg-navy-600;
+  @apply bg-secondary-700;
 }
 
 .mySwiper {
@@ -76,6 +81,7 @@ html {
 
 .clamp-7-lines {
   display: -webkit-box;
+  line-clamp: 7;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 7;
   overflow: hidden;

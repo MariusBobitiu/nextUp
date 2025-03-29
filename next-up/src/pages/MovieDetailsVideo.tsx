@@ -1,5 +1,5 @@
 import Loading from '@/components/layout/Loading'
-import { fetchMovie, fetchVideos } from '@/services/fetchData'
+import { fetchMovie, fetchVideos } from '@/lib/fetchData'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 import { TbArrowBarToLeft as ArrowBackIcon } from "react-icons/tb";
@@ -23,7 +23,7 @@ const MovieDetailsVideo = () => {
     return (
     <>
         {movie && (
-        <div className='w-full flex justify-start items-center gap-8 bg-navy-600 rounded-lg px-12 py-4'>
+        <div className='w-full flex justify-start items-center gap-8 bg-secondary-700 rounded-lg px-12 py-4'>
             {movie.poster_path && (
                 <img
                     src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -40,7 +40,7 @@ const MovieDetailsVideo = () => {
                     </span>
                 </h1>
                 <button
-                    className="font-semibold py-2 pr-4 text-xl hover:text-light-blue-500"
+                    className="font-semibold py-2 pr-4 text-xl hover:text-primary-500"
                     onClick={() => window.location.replace(`/movie/${movieId}-${movie.title.toLowerCase().split(' ').join('-')}`)}
                 >
                     <ArrowBackIcon className='inline-block -mt-1' />{" "}

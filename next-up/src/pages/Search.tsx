@@ -108,13 +108,13 @@ const Search = () => {
     return <div className="w-full text-center">Error fetching movies!</div>
 
   return (
-    <main className="flex h-[98%] w-full flex-col gap-4 overflow-hidden p-12">
+    <main className="container mx-auto flex size-full flex-col gap-4">
       <Suspense fallback={<Loading />}>
         <div className="w-full">
           <SearchBar />
         </div>
         <div
-          className="mt-8 flex h-4/5 w-full flex-wrap items-center justify-center gap-4 overflow-auto"
+          className="mt-4 h-full w-full flex flex-wrap justify-center items-start gap-4 overflow-y-auto"
           id="search-container"
         >
           {movies.results?.map((movie: MovieCardProps) => (
@@ -141,6 +141,11 @@ const Search = () => {
             handlePageChange(newPage)
             window.scrollTo({ top: 0, behavior: 'smooth' })
           }}
+          button_bg_color='bg-gradient-to-b from-accent-400 to-accent-700'
+          text_color='text-primary-100'
+          button_bg_hover='brightness-90'
+          button_bg_active='brightness-75'
+          page_bg_hover='bg-secondary-700'
         />
         <MovieModal
           type={movieType}

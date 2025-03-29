@@ -6,10 +6,10 @@ import { AddToWatchList, RemoveFromWatchList, MarkAsWatched, MarkAsUnwatched, Ge
 router.get("/:username/watchlist", GetWatchList);
 
 // Add to watchList
-router.post("/:username/watchlist/add", AddToWatchList);
+router.post("/:username/watchlist", AddToWatchList);
 
 // Remove from watchList
-router.delete("/:username/watchlist/remove", RemoveFromWatchList);
+router.delete("/:username/watchlist", RemoveFromWatchList);
 
 // Mark as watched
 router.put("/:username/watchlist/watched", MarkAsWatched);

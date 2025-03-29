@@ -5,6 +5,10 @@ dotenv.config();
 
 const userSchema = new mongoose.Schema(
   {
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+      auto: true,
+    },
     email: {
       type: String,
       required: [true, "Email is required"],
@@ -36,9 +40,16 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
     watchList: [{
-      movie: {
+      movieId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Movie",
+        required: [true, "Movie ID is required"],
+      },
+      movie: {
+        type: Number,
+        required: [true, "Movie tmdb id is required"],
+        unique: true,
+        // ref: "Movie",
       },
       addedAt: {
         type: Date,

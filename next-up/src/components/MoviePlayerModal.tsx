@@ -44,14 +44,14 @@ const MoviePlayerModal = ({
   return (
     <div>
       {isOpen && (
-        <div className="fixed left-0 top-0 z-40 flex size-full h-full w-full items-center justify-center bg-gradient-to-br from-navy-800/40 via-navy-600/50 to-navy-900/40">
-          <div className="relative flex h-4/5 w-4/5 flex-col items-start justify-center rounded-md bg-navy-600">
+        <div className="fixed left-0 top-0 z-40 flex size-full h-full w-full items-center justify-center bg-gradient-to-br from-secondary-800/40 via-secondary-700/50 to-secondary-900/40">
+          <div className="relative flex h-4/5 w-4/5 flex-col items-start justify-center rounded-md bg-secondary-700">
             <div className="flex w-full items-center justify-between p-4">
-              <h2 className="text-xl font-semibold tracking-wide text-light-blue-200">
+              <h2 className="text-xl font-semibold tracking-wide text-primary-200">
                 {videoTitle}
               </h2>
               <button
-                className="text-light-blue-200"
+                className="text-primary-200"
                 onClick={() => {
                   setVideoTitle('')
                   setVideoKey('')
@@ -59,7 +59,7 @@ const MoviePlayerModal = ({
                   setIsOpen(false)
                 }}
               >
-                <CloseIcon className="text-3xl text-light-blue-600 hover:text-light-blue-200" />
+                <CloseIcon className="text-3xl text-primary-600 hover:text-primary-200" />
               </button>
             </div>
             <iframe
@@ -67,7 +67,6 @@ const MoviePlayerModal = ({
               height="100%"
               src={`https://www.youtube.com/embed/${videoKey}`}
               title="YouTube video player"
-              frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             ></iframe>

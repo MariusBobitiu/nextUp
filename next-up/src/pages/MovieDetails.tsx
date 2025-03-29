@@ -1,7 +1,7 @@
 import Loading from '@/components/layout/Loading'
 import { useEffect, useState } from 'react'
 import { PiArrowFatLinesRightFill as ArrowRightIcon } from 'react-icons/pi'
-import { useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import {
   FaBookmark as FilledBookmark,
@@ -19,27 +19,60 @@ import {
   fetchReviews,
   fetchSimilarMovies,
   fetchRecommendations,
-} from '@/services/fetchData'
-import getLanguage from '@/services/getLanguage'
+  fetchUserWatchlist,
+} from '@/lib/fetchData'
 import MoviePlayerModal from '@/components/MoviePlayerModal'
-import formatCurrency from '@/services/formatCurrency'
+import { formatCurrency, getLanguage } from '@/lib/utils'
 import ReviewComponent from '@/components/ReviewComponent'
 import { Review } from '@/types/MovieDetails'
+import { useDispatch, useSelector } from 'react-redux'
+import { addToWatchlist, removeFromWatchList } from '@/lib/watchlist'
+import { setUser } from '@/features/user/userSlice'
 
 const MovieDetails = () => {
   const { slug } = useParams()
   const [movieId, setMovieId] = useState('')
-  const [bookmarked, setBookmarked] = useState(false)
+  const [bookmarked, setBookmarked] = useState(true)
   const [activeMedia, setActiveMedia] = useState('images')
   const [videoTitle, setVideoTitle] = useState('')
   const [videoKey, setVideoKey] = useState('')
   const [activeSection, setActiveSection] = useState('similar')
+
+  const queryClient = useQueryClient();
+  const dispatch = useDispatch()
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const user = useSelector((state: any) => state.user.user)
+
+  useEffect(() => {
+    console.log("movieId: ", movieId)
+  }, [movieId])
 
   const navigate = useNavigate()
 
   useEffect(() => {
     setMovieId(slug?.split('-')[0] || '')
   }, [slug])
+
+  const {
+    data: watchlist,
+  } = useQuery({
+    queryKey: ['watchlist'],
+    queryFn: async () => fetchUserWatchlist(user?.username),
+    enabled: !!user?.username,
+  });
+
+  useEffect(() => {
+    if (watchlist?.some((movie: { movieId: number }) => movie?.movieId === parseInt(movieId))) {
+      console.log("Movie is in watchlist ", watchlist)
+      console.log("MovieId: ", movieId)
+      setBookmarked(true)
+    } else {
+      console.log("Movie is not in watchlist", watchlist)
+      console.log("MovieId: ", movieId)
+      setBookmarked(false)
+    }
+  }, [watchlist, movieId])
 
   const {
     data: movie,
@@ -115,8 +148,52 @@ const MovieDetails = () => {
     return `${hours}h ${minutes}m`
   }
 
-  const addToWatchlist = () => {
-    setBookmarked(!bookmarked)
+  const addMutation = useMutation({
+    mutationKey: ['addToWatchlist', user?.username],
+    mutationFn: async () => addToWatchlist(user?.username, parseInt(movieId)),
+    onSuccess: (data) => {
+      setBookmarked(true)
+      dispatch(setUser({...user, watchlist: [...user.watchlist, data]}))
+      console.log('Movie added to watchlist:', data)
+      queryClient.invalidateQueries(['watchlist', user?.username])
+    },
+    onError: (error) => {
+      console.error('Error adding movie to watchlist:', error)
+      alert('Error adding movie to watchlist')
+      queryClient.invalidateQueries(['watchlist', user?.username])
+    }
+  })
+
+  const deleteMutation = useMutation({
+    mutationKey: ['deleteFromWatchlist', user?.username],
+    mutationFn: async () => removeFromWatchList(user?.username, parseInt(movieId)),
+    onSuccess: (data) => {
+      setBookmarked(false)
+      console.log('Movie removed from watchlist:', data)
+      watchlist?.splice(
+        watchlist?.findIndex((movie: { movieId: number }) => movie.movieId === parseInt(movieId)),
+        1
+      )
+      dispatch(setUser({...user, watchList: watchlist}))
+      console.log("User after removing movie from watchlist: ", user)
+      console.log("Watchlist after removing movie from watchlist: ", watchlist)
+      console.log("MovieId: ", movieId)
+      console.log("User: ", user)
+      queryClient.invalidateQueries(['watchlist', user?.username])
+    },
+    onError: (error) => {
+      console.error('Error removing movie from watchlist:', error)
+      alert('Error removing movie from watchlist')
+      queryClient.invalidateQueries(['watchlist', user?.username])
+    }
+  })
+
+  const toggleWatchList = () => {
+    if (bookmarked) {
+      deleteMutation.mutate();
+    } else {
+      addMutation.mutate();
+    }
   }
 
   if (isLoading) return <Loading />
@@ -140,7 +217,7 @@ const MovieDetails = () => {
                 alt={movie.title}
               />
             </div>
-            <div className="absolute left-0 top-0 z-10 h-96 w-full bg-gradient-to-r from-navy-800 via-navy-800/40 to-navy-800"></div>
+            <div className="absolute left-0 top-0 z-10 h-96 w-full bg-gradient-to-r from-secondary-800 via-secondary-800/40 to-secondary-800"></div>
             <div className="relative z-10 flex w-full flex-col items-start justify-center">
               <div className="flex w-full items-center justify-between p-12 pt-24">
                 <div className="flex justify-center relative">
@@ -151,8 +228,8 @@ const MovieDetails = () => {
                   />
                 </div>
                 <button
-                  className="absolute right-2 top-2 px-2 py-2 text-accent-teal hover:text-accent-teal-700"
-                  onClick={addToWatchlist}
+                  className="absolute right-2 top-2 px-2 py-2 text-accent hover:text-accent-700"
+                  onClick={toggleWatchList}
                 >
                   {bookmarked ? (
                     <FilledBookmark className="h-10 w-10" />
@@ -160,11 +237,11 @@ const MovieDetails = () => {
                     <EmptyBookmark className="h-10 w-10" />
                   )}
                 </button>
-                <div className="flex w-1/2 flex-col items-end justify-center gap-2">
+                <div className="flex w-2/3 flex-col items-end justify-center gap-2">
                   <h1 className="text-center text-4xl font-bold">
                     {movie.title} ({movie.release_date.slice(0, 4)})
                   </h1>
-                  <p className="-mt-2 mb-2 text-center text-light-blue-400">
+                  <p className="-mt-2 mb-2 text-center text-primary-400">
                     {movie.tagline ? movie.tagline : 'No tagline'}
                   </p>
                   <div className="flex w-full items-center justify-end gap-2">
@@ -177,7 +254,7 @@ const MovieDetails = () => {
                           (result: { iso_3166_1: string }) =>
                             result.iso_3166_1 === 'GB'
                         )?.release_dates[0].certification ? (
-                          <span className="border border-light-blue-300 px-1">
+                          <span className="border border-primary-300 px-1">
                             {
                               releaseDate?.results?.find(
                                 (result: { iso_3166_1: string }) =>
@@ -196,13 +273,13 @@ const MovieDetails = () => {
                         <span>●</span>
                       </p>
                     ) : (
-                      <span className="text-lg">Release date unknown</span>
+                      null
                     )}
-                    {movie.genres.map(
+                    {movie.genres.slice(0,6).map(
                       (genre: { id: number; name: string }, index: number) => (
                         <span
                           key={genre.id}
-                          className="text-lg text-light-blue-300"
+                          className="text-lg text-primary-300"
                         >
                           {genre.name}
                           {index < movie.genres.length - 1 ? ', ' : ''}
@@ -215,7 +292,7 @@ const MovieDetails = () => {
                   <a
                     href={`#player-${trailer?.key}-${trailer?.name}`}
                     rel="noreferrer"
-                    className="text-xl text-accent-teal hover:text-accent-teal-600 transition-all ease-in-out duration-300"
+                    className="text-xl text-accent hover:text-accent-600 transition-all ease-in-out duration-300"
                     onClick={() => {
                       setVideoTitle(trailer?.name)
                       setVideoKey(trailer?.key)
@@ -241,23 +318,25 @@ const MovieDetails = () => {
                         }) => (
                           <div
                             key={actor.id}
-                            className="flex h-80 min-w-40 flex-col items-center justify-start gap-1 rounded-lg bg-navy-500 pb-2"
+                            className="flex h-80 min-w-40 flex-col items-center gap-1 rounded-lg bg-secondary-700 pb-2"
                           >
                             <img
                               className="h-3/4 w-full rounded-t-lg object-cover"
                               src={`https://image.tmdb.org/t/p/w500${actor.profile_path}`}
                               alt={actor.name}
                             />
-                            <p className="text-md px-2 text-center font-bold">
-                              {actor.name}
-                            </p>
-                            <p className="text-sm">{actor.character}</p>
+                            <div className='w-full h-1/4 flex flex-col items-center justify-center'>
+                              <p className="text-md px-2 text-center font-bold">
+                                {actor.name}
+                              </p>
+                              <p className="text-sm">{actor.character}</p>
+                            </div>
                           </div>
                         )
                       )}
                     <div className="flex h-80 min-w-40 flex-col items-center justify-start gap-1">
                       <button
-                        className="flex min-h-full min-w-40 flex-col items-center justify-center rounded-lg bg-navy-600 p-2"
+                        className="flex min-h-full min-w-40 flex-col items-center justify-center rounded-lg bg-secondary-700 p-2"
                         onClick={() => navigate(`/movie/${slug}/cast`)}
                       >
                         <span className="text-md text-center font-bold">
@@ -309,9 +388,9 @@ const MovieDetails = () => {
                                 alt={movie.title}
                               />
                             ))}
-                          <div className="my-4 flex h-80 w-full min-w-64 items-center justify-center rounded-lg bg-navy-600">
+                          <div className="my-4 flex h-80 w-full min-w-64 items-center justify-center rounded-lg bg-secondary-700">
                             <button
-                              className="text-xl text-light-blue-200 hover:text-light-blue-400"
+                              className="text-xl text-primary-200 hover:text-primary-400"
                               onClick={() => navigate(`/movie/${slug}/images`)}
                             >
                               View all images{' '}
@@ -341,7 +420,7 @@ const MovieDetails = () => {
                                   <a
                                     href={`#player-${video.id}-${video.name}`}
                                     rel="noreferrer"
-                                    className="absolute left-0 top-0 flex h-full w-full items-center justify-center text-light-blue-200 hover:text-accent-teal"
+                                    className="absolute left-0 top-0 flex h-full w-full items-center justify-center text-primary-200 hover:text-accent"
                                     onClick={() => {
                                       setVideoTitle(video.name)
                                       setVideoKey(video.key)
@@ -352,9 +431,9 @@ const MovieDetails = () => {
                                 </div>
                               )
                             )}
-                          <div className="my-4 flex h-80 w-full min-w-64 items-center justify-center rounded-lg bg-navy-600">
+                          <div className="my-4 flex h-80 w-full min-w-64 items-center justify-center rounded-lg bg-secondary-700">
                             <button
-                              className="text-xl text-light-blue-200 hover:text-light-blue-400"
+                              className="text-xl text-primary-200 hover:text-primary-400"
                               onClick={() => navigate(`/movie/${slug}/videos`)}
                             >
                               View all videos{' '}
@@ -377,9 +456,9 @@ const MovieDetails = () => {
                                 />
                               )
                             )}
-                          <div className="my-4 flex h-80 w-full min-w-48 items-center justify-center rounded-lg bg-navy-600">
+                          <div className="my-4 flex h-80 w-full min-w-48 items-center justify-center rounded-lg bg-secondary-700">
                             <button
-                              className="text-xl text-light-blue-200 hover:text-light-blue-400"
+                              className="text-xl text-primary-200 hover:text-primary-400"
                               onClick={() => navigate(`/movie/${slug}/posters`)}
                             >
                               View all posters{' '}
@@ -409,13 +488,13 @@ const MovieDetails = () => {
                     <div className="mt-8 flex flex-col gap-4">
                       <div className="flex items-center justify-start gap-8">
                         <button
-                          className={`text-3xl font-medium hover:text-light-blue-50 ${activeSection === 'similar' ? 'border-b border-accent-teal' : ''}`}
+                          className={`text-3xl font-medium hover:text-primary-50 ${activeSection === 'similar' ? 'border-b border-accent-teal' : ''}`}
                           onClick={() => setActiveSection('similar')}
                         >
                           Similar Movies
                         </button>
                         <button
-                          className={`text-3xl font-medium hover:text-light-blue-50 ${activeSection === 'recommendations' ? 'border-b border-accent-teal' : ''}`}
+                          className={`text-3xl font-medium hover:text-primary-50 ${activeSection === 'recommendations' ? 'border-b border-accent-teal' : ''}`}
                           onClick={() => setActiveSection('recommendations')}
                         >
                           Recommendations
@@ -431,14 +510,16 @@ const MovieDetails = () => {
                               release_date: string
                               vote_average: number
                             }) => (
-                              <div
+                              <a
                                 key={movie.id}
+                                href={`/movie/${movie.id}-${movie.title.toLowerCase().split(' ').join('-')}`}
+                                rel="noreferrer"
                                 className="flex min-w-96 flex-col items-start justify-start rounded-lg pb-2"
-                                onClick={() =>
-                                  navigate(
-                                    `/movie/${movie.id}-${movie.title.toLowerCase().split(' ').join('-')}`
-                                  )
-                                }
+                                // onClick={() =>
+                                //   navigate(
+                                //     `/movie/${movie.id}-${movie.title.toLowerCase().split(' ').join('-')}`
+                                //   )
+                                // }
                               >
                                 <img
                                   className="h-52 w-96 rounded-lg object-cover"
@@ -446,14 +527,17 @@ const MovieDetails = () => {
                                   alt={movie.title}
                                 />
                                 <div className="flex w-full items-center justify-between gap-2 px-2">
-                                  <h3 className="text-lg font-bold">
+                                  <h3 className="text-lg font-bold truncate">
                                     {movie.title}
                                   </h3>
-                                  <p className="text-sm">
-                                    ⭐ {movie.vote_average}
+                                  <p className="text-sm text-nowrap">
+                                    <span className='inline-block mr-1'>
+                                      ⭐
+                                    </span>
+                                    {movie.vote_average}
                                   </p>
                                 </div>
-                              </div>
+                              </a>
                             )
                           )}
                         {activeSection === 'recommendations' &&
@@ -465,14 +549,16 @@ const MovieDetails = () => {
                               release_date: string
                               vote_average: number
                             }) => (
-                              <div
+                              <a
                                 key={movie.id}
-                                className="flex min-w-96 flex-col items-start justify-start rounded-lg pb-2"
-                                onClick={() =>
-                                  navigate(
-                                    `/movie/${movie.id}-${movie.title.toLowerCase().split(' ').join('-')}`
-                                  )
-                                }
+                                href={`/movie/${movie.id}-${movie.title.toLowerCase().split(' ').join('-')}`}
+                                rel="noreferrer"
+                                className="flex min-w-96 flex-col items-start justify-start rounded-lg pb-2 cursor-pointer"
+                                // onClick={() =>
+                                //   navigate(
+                                //     `/movie/${movie.id}-${movie.title.toLowerCase().split(' ').join('-')}`
+                                //   )
+                                // }
                               >
                                 <img
                                   className="h-52 w-96 rounded-lg object-cover"
@@ -480,14 +566,17 @@ const MovieDetails = () => {
                                   alt={movie.title}
                                 />
                                 <div className="flex w-full items-center justify-between gap-2 px-2">
-                                  <h3 className="text-lg font-bold">
+                                  <h3 className="text-lg font-bold truncate">
                                     {movie.title}
                                   </h3>
-                                  <p className="text-sm">
-                                    ⭐ {movie.vote_average}
+                                  <p className="text-sm text-nowrap">
+                                    <span className='inline-block mr-1'>
+                                      ⭐ 
+                                    </span>
+                                    {movie.vote_average}
                                   </p>
                                 </div>
-                              </div>
+                              </a>
                             )
                           )}
                       </div>
@@ -500,7 +589,7 @@ const MovieDetails = () => {
                       href={movie.homepage}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-xl font-bold text-accent-teal hover:text-accent-teal-700"
+                      className="text-xl font-bold text-accent hover:text-accent-700"
                     >
                       Visit official website&nbsp;
                       <ExternalLinkIcon className="-mt-2 inline-block text-xl" />
@@ -531,7 +620,7 @@ const MovieDetails = () => {
                         (keyword: { id: number; name: string }) => (
                           <span
                             key={keyword.id}
-                            className="text-md m-1 rounded-lg bg-navy-600 px-2 py-1"
+                            className="text-md m-1 rounded-lg bg-secondary-700 px-2 py-1"
                           >
                             {keyword.name}
                           </span>

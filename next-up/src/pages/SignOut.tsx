@@ -34,7 +34,7 @@ const SignOut = () => {
             .location
             .replace('/');
         
-    }, [user]);
+    }, [user, dispatch]);
 
     return (
         <div>

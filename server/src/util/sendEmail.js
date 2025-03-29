@@ -5,6 +5,7 @@ dotenv.config();
 
 sgMail.setApiKey(process.env.SG_API_KEY);
 console.log(process.env.SG_API_KEY);
+console.log(process.env.EMAIL_FROM);
 
 const sendEmail = async (user, token) => {
   const msg = {
@@ -158,9 +159,9 @@ const sendEmail = async (user, token) => {
     <![endif]-->
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" align="center" id="innerTable"><tr><td>
     <table class="t22" role="presentation" cellpadding="0" cellspacing="0" align="center"><tr>
-    <!--[if !mso]>--><td class="t21" style="background-color:#1A2128;width:420px;padding:60px 30px 70px 30px;">
+    <!--[if !mso]>--><td class="t21" style="background-color:#001E27;width:420px;padding:60px 30px 70px 30px;">
     <!--<![endif]-->
-    <!--[if mso]><td class="t21" style="background-color:#1A2128;width:480px;padding:60px 30px 70px 30px;"><![endif]-->
+    <!--[if mso]><td class="t21" style="background-color:#001E27;width:480px;padding:60px 30px 70px 30px;"><![endif]-->
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td>
     <table class="t20" role="presentation" cellpadding="0" cellspacing="0" align="center"><tr>
     <!--[if !mso]>--><td class="t19" style="width:475px;">
@@ -185,7 +186,7 @@ const sendEmail = async (user, token) => {
     <!--[if !mso]>--><td class="t9" style="width:475px;">
     <!--<![endif]-->
     <!--[if mso]><td class="t9" style="width:475px;"><![endif]-->
-    <p class="t8" style="margin:0;Margin:0;font-family:Fira Sans,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;line-height:26px;font-weight:400;font-style:normal;font-size:16px;text-decoration:none;text-transform:none;direction:ltr;color:#D0D8E1;text-align:left;mso-line-height-rule:exactly;mso-text-raise:3px;">You&#39;re receiving this e-mail because you requested a password reset for your Flash account.</p></td>
+    <p class="t8" style="margin:0;Margin:0;font-family:Fira Sans,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;line-height:26px;font-weight:400;font-style:normal;font-size:16px;text-decoration:none;text-transform:none;direction:ltr;color:#D0D8E1;text-align:left;mso-line-height-rule:exactly;mso-text-raise:3px;">You&#39;re receiving this e-mail because you requested a password reset for your nextUp account.</p></td>
     </tr></table>
     </td></tr><tr><td><div class="t11" style="mso-line-height-rule:exactly;mso-line-height-alt:18px;line-height:18px;font-size:1px;display:block;">&nbsp;</div></td></tr><tr><td>
     <table class="t14" role="presentation" cellpadding="0" cellspacing="0" align="center"><tr>
@@ -196,9 +197,9 @@ const sendEmail = async (user, token) => {
     </tr></table>
     </td></tr><tr><td><div class="t15" style="mso-line-height-rule:exactly;mso-line-height-alt:30px;line-height:30px;font-size:1px;display:block;">&nbsp;</div></td></tr><tr><td>
     <table class="t18" role="presentation" cellpadding="0" cellspacing="0" align="left"><tr>
-    <!--[if !mso]>--><td class="t17" style="background-color:#12D3A6;overflow:hidden;width:246px;text-align:center;line-height:46px;mso-line-height-rule:exactly;mso-text-raise:10px;border-radius:40px 40px 40px 40px;">
+    <!--[if !mso]>--><td class="t17" style="background-color:#F15025;overflow:hidden;width:246px;text-align:center;line-height:46px;mso-line-height-rule:exactly;mso-text-raise:10px;border-radius:40px 40px 40px 40px;">
     <!--<![endif]-->
-    <!--[if mso]><td class="t17" style="background-color:#12D3A6;overflow:hidden;width:246px;text-align:center;line-height:46px;mso-line-height-rule:exactly;mso-text-raise:10px;border-radius:40px 40px 40px 40px;"><![endif]-->
+    <!--[if mso]><td class="t17" style="background-color:#F15025;overflow:hidden;width:246px;text-align:center;line-height:46px;mso-line-height-rule:exactly;mso-text-raise:10px;border-radius:40px 40px 40px 40px;"><![endif]-->
     <a class="t16" href="${process.env.CLIENT_URL}/reset-password/${token}" style="display:block;margin:0;Margin:0;font-family:Montserrat,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Arial,sans-serif;line-height:46px;font-weight:800;font-style:normal;font-size:12px;text-decoration:none;text-transform:uppercase;letter-spacing:0.5px;direction:ltr;color:#FFFFFF;text-align:center;mso-line-height-rule:exactly;mso-text-raise:10px;" target="_blank">Reset your password</a></td>
     </tr></table>
     </td></tr></table></td>
@@ -207,9 +208,9 @@ const sendEmail = async (user, token) => {
     </tr></table>
     </td></tr><tr><td>
     <table class="t37" role="presentation" cellpadding="0" cellspacing="0" align="center"><tr>
-    <!--[if !mso]>--><td class="t36" style="background-color:#14191F;width:420px;padding:60px 30px 60px 30px;">
+    <!--[if !mso]>--><td class="t36" style="background-color:#003141;width:420px;padding:60px 30px 60px 30px;">
     <!--<![endif]-->
-    <!--[if mso]><td class="t36" style="background-color:#14191F;width:480px;padding:60px 30px 60px 30px;"><![endif]-->
+    <!--[if mso]><td class="t36" style="background-color:#003141;width:480px;padding:60px 30px 60px 30px;"><![endif]-->
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td>
     <table class="t35" role="presentation" cellpadding="0" cellspacing="0" align="center"><tr>
     <!--[if !mso]>--><td class="t34" style="width:475px;">

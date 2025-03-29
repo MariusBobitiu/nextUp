@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 const movieSchema = new mongoose.Schema(
   {
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+      auto: true,
+    },
     movieId: {
       type: Number,
       required: [true, "Movie ID is required"],

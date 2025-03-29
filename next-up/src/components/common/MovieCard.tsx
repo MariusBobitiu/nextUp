@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import placeholder from '@/assets/placeholder.jpg'
 import { MovieCardProps } from '@/types/MovieCard'
-import { getMovieGenre, getTVGenre } from '@/services/getGenre'
+import { getMovieGenre, getTVGenre } from '@/lib/utils'
 
 const MovieCard = ({
   onClick,
@@ -15,7 +15,7 @@ const MovieCard = ({
 
   return (
     <div
-      className={`relative flex h-[400px] w-[300px] cursor-pointer flex-col rounded-lg border border-navy-600 bg-navy-700 transition-colors duration-500 ease-in-out hover:border-accent-teal-700`}
+      className={`relative flex h-[400px] w-[300px] cursor-pointer flex-col rounded-lg border ${isHovered ? 'border-primary' : 'border-secondary-700'} bg-secondary-800 transition-colors duration-500 ease-in-out hover:border-accent-teal-700`}
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -32,7 +32,7 @@ const MovieCard = ({
           alt="image placeholder"
           className={`h-full w-full rounded-t-lg bg-center object-cover brightness-[0.70] ${isHovered ? 'brightness-[1.05]' : 'brightness-[0.70]'} transition-all duration-500 ease-in-out`}
         />
-        <div className="absolute left-0 top-0 h-full w-full rounded-t-lg bg-gradient-to-t from-navy-700 to-transparent" />
+        <div className="absolute left-0 top-0 h-full w-full rounded-t-lg bg-gradient-to-t from-secondary-800 to-transparent" />
       </div>
       <div className=" bottom-2 left-0 z-10 h-2/3 w-full p-4">
         <h1 className="-mt-4 font-display text-2xl font-extrabold">{title}</h1>
@@ -47,7 +47,7 @@ const MovieCard = ({
               </span>
             ))}
         </div>
-        <p className="line-clamp-3 py-4 text-sm">{overview}</p>
+        <p className="line-clamp-3 mt-6 text-sm">{overview}</p>
       </div>
     </div>
   )

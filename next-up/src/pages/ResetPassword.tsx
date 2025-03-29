@@ -78,8 +78,8 @@ const ResetPassword = () => {
       {isPageLoading && <Loading />}
       {tokenValid ? (
         <div className="flex h-full w-full items-center justify-center gap-16">
-          <div className="relative flex h-full w-2/5 items-center justify-center shadow-xl">
-            <div className="absolute z-0 h-2/5 w-3/5 rounded-full bg-navy-500 blur-2xl" />
+          <div className="relative flex h-full w-2/5 items-center justify-center">
+            <div className="absolute z-0 h-2/5 w-3/5 rounded-full bg-secondary-700 blur-2xl" />
             <img
               src={Scene}
               alt="Forgot Password"
@@ -91,27 +91,27 @@ const ResetPassword = () => {
               <Loader />
             ) : passwordReset ? (
               <div className="flex flex-col items-start justify-center gap-2">
-                <h1 className="text-5xl font-bold text-light-blue-200">
+                <h1 className="text-5xl font-bold text-primary-200">
                   Your password has been reset
-                  <span className="text-accent-teal">.</span>
+                  <span className="text-accent">.</span>
                 </h1>
-                <p className="text-xl text-light-blue-400">
+                <p className="text-xl text-primary-400">
                   You can now sign in with your new password.
                 </p>
                 <a
                   href="/sign-in"
-                  className="mt-4 self-center rounded-lg bg-accent-teal px-8 py-3 text-xl font-bold text-white focus:outline-none"
+                  className="mt-4 self-center rounded-lg bg-accent px-8 py-3 text-xl font-bold text-white focus:outline-none"
                 >
                   Sign In
                 </a>
               </div>
             ) : (
               <div className="flex flex-col items-start justify-center gap-2">
-                <h1 className="text-5xl font-bold text-light-blue-200">
+                <h1 className="text-5xl font-bold text-primary-200">
                   Forgot your password?
-                  <span className="text-accent-teal">.</span>
+                  <span className="text-accent">.</span>
                 </h1>
-                <p className="text-xl text-light-blue-400">
+                <p className="text-xl text-primary-400">
                   Enter your email below to reset your password.
                 </p>
                 <Input
@@ -133,7 +133,7 @@ const ResetPassword = () => {
                   className="w-full"
                 />
                 <button
-                  className="mt-4 self-center rounded-lg bg-accent-teal px-8 py-3 text-xl font-bold text-white focus:outline-none"
+                  className="mt-4 self-center rounded-lg bg-accent px-8 py-3 text-xl font-bold text-white focus:outline-none"
                   onClick={resetPassword}
                 >
                   Reset Password
@@ -145,10 +145,10 @@ const ResetPassword = () => {
       ) : (
         <div className="flex h-full w-full items-center justify-center gap-16">
           <div className="flex flex-col items-center justify-center gap-4 p-16">
-            <h1 className="text-4xl font-bold text-light-blue">
+            <h1 className="text-4xl font-bold text-primary">
               Invalid token
             </h1>
-            <p className="text-xl text-light-blue-400">
+            <p className="text-xl text-primary-400">
               The token you provided is invalid. Please try again.
             </p>
           </div>
@@ -164,7 +164,7 @@ const Loader = () => {
       <div className="h-16 w-16 animate-pulse">
         <img src={Logo} alt="Logo" className="h-full w-full" />
       </div>
-      <p className="animate-pulse text-2xl font-bold text-light-blue">
+      <p className="animate-pulse text-2xl font-bold text-primary">
         Bear with us...
       </p>
     </div>

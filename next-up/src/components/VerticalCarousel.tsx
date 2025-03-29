@@ -21,7 +21,7 @@ const VerticalCarousel: React.FC<VerticalCarouselProps> = ({ paragraphs, interva
     const containerHeight = 100 * paragraphs.length; // 100% height for each paragraph
 
     return (
-        <div className="w-80 h-1/6 flex gap-2 justify-center items-center bg-gradient-to-b from-navy-600 to-navy-500 border-2 border-navy-500 rounded-lg absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]">
+        <div className="w-80 h-1/6 flex gap-2 justify-center items-center bg-gradient-to-b from-secondary-700 to-secondary-500 border-2 border-secondary-500 rounded-lg absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]">
             <div className="w-1/4 flex items-center justify-center">
                 <Spinner className='animate-spin text-4xl'/>
             </div>

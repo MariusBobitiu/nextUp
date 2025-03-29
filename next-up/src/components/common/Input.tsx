@@ -11,6 +11,10 @@ type Props = {
   name: string
   label: string
   placeholder: string
+  invalid?: boolean
+  error?: string
+  required?: boolean
+  disabled?: boolean
   className?: string
   autoComplete?: string
   value: string
@@ -35,7 +39,7 @@ const Input = (props: Props) => {
     <div className="input relative flex w-full flex-col">
       <label
         htmlFor={props.name}
-        className="relative top-2 ml-4 w-fit rounded-xl bg-navy-700 px-[3px] text-sm font-semibold text-light-blue-300"
+        className="relative top-2 ml-4 w-fit rounded-xl bg-secondary-800 px-[3px] text-sm font-semibold text-primary-300"
       >
         {props.label}
       </label>
@@ -43,31 +47,38 @@ const Input = (props: Props) => {
         id={props.name}
         type={props.type}
         value={props.value}
+        required={props.required}
+        disabled={props.disabled}
         onChange={props.onChange}
         placeholder={props.placeholder}
         name={props.name}
         autoComplete={props.autoComplete ? props.autoComplete : 'off'}
-        className={`input w-full rounded-xl border-2 border-navy-600 bg-navy-700 px-[10px] py-[11px] text-xs transition-all duration-300 ease-in-out placeholder:text-light-blue/25 autofill:bg-navy-400 invalid:border-red-500 hover:border-navy-400 focus:border-navy-300 focus:outline-none active:border-navy-500 ${props.className && props.className}`}
+        className={`w-full rounded-xl border-2 border-secondary-700 bg-secondary-800 px-3 py-4 text-base transition-all duration-300 ease-in-out placeholder:text-primary/25 autofill:bg-secondary-400 invalid:border-red-500 ${props.invalid && '!border-red-500'} hover:border-secondary-400 focus:border-secondary-300 focus:outline-none active:border-secondary-500 ${props.className || ''}`}
       />
-      <div className="absolute bottom-[20%] right-4">
+      <div className="absolute right-4 top-1/2">
         {props.name.includes('assword') ? (
           isPasswordVisible ? (
             <EyeSlashIcon
-              className="cursor-pointer text-xl text-light-blue-300"
+              className="cursor-pointer text-xl text-primary-300"
               onClick={togglePasswordVisibility}
             />
           ) : (
             <EyeIcon
-              className="cursor-pointer text-xl text-light-blue-300"
+              className="cursor-pointer text-xl text-primary-300"
               onClick={togglePasswordVisibility}
             />
           )
         ) : props.type === 'email' ? (
-          <EmailIcon className="text-xl text-light-blue-300" />
+          <EmailIcon className="text-xl text-primary-300" />
         ) : (
-          <UserIcon className="text-xl text-light-blue-300" />
+          <UserIcon className="text-xl text-primary-300" />
         )}
       </div>
+      {props.error && (
+        <p className="absolute -bottom-2 left-2 bg-secondary-800 px-2 text-sm text-red-500">
+          {props.error}
+        </p>
+      )}
     </div>
   )
 }

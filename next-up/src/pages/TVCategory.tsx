@@ -2,12 +2,12 @@ import Pagination from '@/components/common/Pagination'
 import Loading from '@/components/layout/Loading'
 import MovieModal from '@/components/MovieModal'
 import MovieCard from '@/components/common/MovieCard'
-import { getTVGenre } from '@/services/getGenre'
 import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import CategoriesLayout from '@/components/layout/CategoriesLayout'
 import { MovieCardProps } from '@/types/MovieCard'
+import { getTVGenre } from '@/lib/utils'
 
 const TVCategory = () => {
   const categoryId = Number(useParams().id)
@@ -80,16 +80,21 @@ const TVCategory = () => {
             genre_ids={tvShow.genre_ids}
           />
         ))}
-        <Pagination
-          currentPage={tvShows.page || 1}
-          totalPages={tvShows.total_pages || 1}
-          onPageChange={(newPage: number) => {
-            handlePageChange(newPage)
-            window.scrollTo({ top: 0, behavior: 'smooth' })
-          }}
-        />
-        <MovieModal type="tv" id={movieId} onClose={() => setMovieId(0)} />
       </div>
+      <Pagination
+        currentPage={tvShows.page || 1}
+        totalPages={tvShows.total_pages || 1}
+        onPageChange={(newPage: number) => {
+          handlePageChange(newPage)
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }}
+        button_bg_color='bg-gradient-to-b from-accent-400 to-accent-700'
+        text_color='text-primary-100'
+        button_bg_hover='brightness-90'
+        button_bg_active='brightness-75'
+        page_bg_hover='bg-secondary-700'
+      />
+      <MovieModal type="tv" id={movieId} onClose={() => setMovieId(0)} />
     </CategoriesLayout>
   )
 }

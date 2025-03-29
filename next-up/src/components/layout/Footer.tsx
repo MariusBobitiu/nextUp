@@ -19,7 +19,7 @@ const Footer = () => {
             href="https://linkedin.com/in/marius-bobitiu"
             rel="noopener noreferrer"
             target="_blank"
-            className='hover:text-accent-teal focus:outline-none'
+            className='hover:text-accent focus:outline-none'
           >
             Marius Bobitiu
           </a>

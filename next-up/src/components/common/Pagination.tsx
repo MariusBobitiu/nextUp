@@ -6,6 +6,8 @@ type PaginationProps = {
   text_hover?: string
   button_bg_color?: string
   button_bg_hover?: string
+  button_bg_active?: string
+  page_bg_hover?: string
 }
 
 const Pagination: React.FC<PaginationProps> = ({
@@ -16,6 +18,8 @@ const Pagination: React.FC<PaginationProps> = ({
   text_hover,
   button_bg_color,
   button_bg_hover,
+  button_bg_active,
+  page_bg_hover,
 }) => {
   const renderPageNumbers = () => {
     const items = []
@@ -58,7 +62,7 @@ const Pagination: React.FC<PaginationProps> = ({
   return (
     <div className={`mb-2 flex w-full items-center justify-center gap-4`}>
       <button
-        className={`rounded-lg ${button_bg_color ? button_bg_color : 'bg-navy-400'} px-4 py-2 ${text_color ? text_color : 'text-light-blue-300'} hover:${button_bg_hover ? button_bg_hover : 'bg-navy-500'} disabled:opacity-25 disabled:hover:bg-navy-400 hover:${text_hover ? text_hover : 'text-light-blue-50'}`}
+        className={`rounded-lg ${button_bg_color ? button_bg_color : 'bg-secondary-400'} px-4 py-2 ${text_color ? text_color : 'text-primary-300'} hover:${button_bg_hover ? button_bg_hover : 'bg-secondary-500'} disabled:opacity-25 disabled:hover:bg-secondary-400 hover:${text_hover ? text_hover : 'text-primary-50'} active:${button_bg_active ? button_bg_active : 'bg-secondary-500'}`}
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
       >
@@ -68,7 +72,7 @@ const Pagination: React.FC<PaginationProps> = ({
         typeof item === 'number' ? (
           <button
             key={index}
-            className={`rounded-lg px-4 py-2 ${text_color ? text_color : 'text-light-blue-400'} ${currentPage === item ? (button_bg_color ? button_bg_color : 'bg-navy-300') : ''} hover:${text_hover ? text_hover : 'text-light-blue-100'}`}
+            className={`rounded-lg px-3 py-2 hover:${page_bg_hover ? page_bg_hover : ''} ${text_color ? text_color : 'text-primary-400'} ${currentPage === item ? (button_bg_color ? button_bg_color : 'bg-secondary-300') : ''} hover:${text_hover ? text_hover : 'text-primary-100'} active:${button_bg_active ? button_bg_active : 'bg-secondary-500'}`}
             onClick={() => onPageChange(item)}
             disabled={currentPage === item}
           >
@@ -81,7 +85,7 @@ const Pagination: React.FC<PaginationProps> = ({
         )
       )}
       <button
-        className={`rounded-lg ${button_bg_color ? button_bg_color : 'bg-navy-400'} px-4 py-2 ${text_color ? text_color : 'text-light-blue-300'} hover:${button_bg_hover ? button_bg_hover : 'bg-navy-500'} disabled:opacity-25 disabled:hover:bg-navy-400 hover:${text_hover ? text_hover : 'text-light-blue-50'}`}
+        className={`rounded-lg ${button_bg_color ? button_bg_color : 'bg-secondary-400'} px-4 py-2 ${text_color ? text_color : 'text-primary-300'} hover:${button_bg_hover ? button_bg_hover : 'bg-secondary-500'} disabled:opacity-25 disabled:hover:bg-secondary-400 hover:${text_hover ? text_hover : 'text-primary-50'} active:${button_bg_active ? button_bg_active : 'bg-secondary-500'}`}
         onClick={() => onPageChange(currentPage + 1)}
       >
         Next

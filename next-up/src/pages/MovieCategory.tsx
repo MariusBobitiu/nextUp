@@ -1,6 +1,5 @@
 import CategoriesLayout from '@/components/layout/CategoriesLayout'
 import Loading from '@/components/layout/Loading'
-import { getMovieGenre } from '@/services/getGenre'
 import { useQuery } from 'react-query'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
@@ -8,6 +7,7 @@ import MovieCard from '@/components/common/MovieCard'
 import MovieModal from '@/components/MovieModal'
 import { MovieCardProps } from '@/types/MovieCard'
 import Pagination from '@/components/common/Pagination'
+import { getMovieGenre } from '@/lib/utils'
 
 const Category = () => {
   const categoryId = Number(useParams().id)
@@ -88,6 +88,11 @@ const Category = () => {
             handlePageChange(newPage)
             window.scrollTo({ top: 0, behavior: 'smooth' })
           }}
+          button_bg_color='bg-gradient-to-b from-accent-400 to-accent-700'
+          text_color='text-primary-100'
+          button_bg_hover='brightness-90'
+          button_bg_active='brightness-75'
+          page_bg_hover='bg-secondary-700'
         />
         <MovieModal type="movie" id={movieId} onClose={() => setMovieId(0)} />
       </CategoriesLayout>

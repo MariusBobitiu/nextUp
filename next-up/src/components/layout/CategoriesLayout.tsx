@@ -1,7 +1,7 @@
 import Loading from '@/components/layout/Loading'
 import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 type CategoriesProps = {
   children?: React.ReactNode
@@ -44,8 +44,14 @@ const fetchTVCategories = async () => {
 
 const CategoriesLayout = ({ children }: CategoriesProps) => {
   const navigate = useNavigate()
-  // const location = useLocation()
-  const { categoryId } = useParams()
+  const location = useLocation();
+  const { id } = useParams<{ id: string }>()
+
+  useEffect(() => {
+    console.log("Location: ", location.pathname)
+    console.log("ID: ", id)
+  }, [location.pathname, id])
+
   const [activeCategory, setActiveCategory] = useState<ActiveCategory | null>(
     null
   )
@@ -53,77 +59,56 @@ const CategoriesLayout = ({ children }: CategoriesProps) => {
   const {
     data: movieCategories,
     isLoading: movieLoading,
-    error: movieError,
+    isError: movieError,
   } = useQuery<CategoryProps[]>('movieCategories', fetchMovieCategories)
   const {
     data: tvCategories,
     isLoading: tvLoading,
-    error: tvError,
-  } = useQuery<CategoryProps[]>('tvCategories', fetchTVCategories)
-
-  const isLoading = movieLoading || tvLoading
-  const error = movieError || tvError
-
-  useEffect(() => {
-    if (!movieCategories || !tvCategories) return
-    const movieActive = movieCategories.find(
-      (cat: CategoryProps) =>
-        cat.id === Number(location.pathname.split('/').pop())
-    )
-    const tvActive = tvCategories.find(
-      (cat: CategoryProps) =>
-        cat.id === Number(location.pathname.split('/').pop())
-    )
-    if (movieActive) {
-      setActiveCategory({
-        id: movieActive.id,
-        name: movieActive.name,
-        type: 'movie',
-      })
-      document.title = `Next Up - Categories | ${movieActive.name}`
-    } else if (tvActive) {
-      setActiveCategory({ id: tvActive.id, name: tvActive.name, type: 'tv' })
-      document.title = `Next Up - Categories | ${tvActive.name}`
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname, movieCategories, tvCategories])
+    isError: tvError,
+  } = useQuery<CategoryProps[]>({
+    queryKey: 'tvCategories', 
+    queryFn: fetchTVCategories,
+    placeholderData: [],
+    enabled: !!movieCategories,
+    keepPreviousData: true,
+  })
 
   useEffect(() => {
-    // Function to find and set active category
-    const findCategory = (
-      categories: CategoryProps[],
-      type: 'movie' | 'tv'
-    ) => {
-      const category = categories.find((cat) => cat.id === Number(categoryId))
-      if (category) {
-        setActiveCategory({ id: category.id, name: category.name, type })
-        document.title = `Next Up - Categories | ${category.name}`
-      }
-    }
+    if (!movieCategories || !tvCategories) return;
 
-    if (movieCategories) findCategory(movieCategories, 'movie')
-    if (tvCategories) findCategory(tvCategories, 'tv')
-  }, [categoryId, movieCategories, tvCategories, setActiveCategory])
+    const categoryId = id;
+    const categoryType = location.pathname.split('/')[2]; // 'movie' or 'tv'
+    const categories = categoryType === 'movie' ? movieCategories : tvCategories;
+    const category = categories.find((cat) => cat.id === Number(categoryId));
+    console.group('Category');
+      console.log('Category ID:', categoryId);
+      console.log('Category Type:', categoryType);
+      console.log('Categories:', categories);
+      console.log('Category:', category);
+    console.groupEnd();
+    if (category) {
+      setActiveCategory({ id: category.id, name: category.name, type: categoryType as 'movie' | 'tv' });
+      document.title = `Next Up - Categories | ${category.name}`;
+    } else {
+      setActiveCategory(null);
+      document.title = 'Next Up - Categories';
+    }
+  }, [id, movieCategories, tvCategories, location.pathname])
 
   const selectCategory = (category: CategoryProps, type: 'movie' | 'tv') => {
-    setActiveCategory({ id: category.id, name: category.name, type })
     navigate(`/categories/${type}/${category.id}`)
   }
 
-  if (isLoading) return <Loading />
-  if (error)
-    return <div className="w-full text-center">Error fetching categories!</div>
-
   return (
     <>
-      <div className="grid size-full grid-cols-12 overflow-scroll p-24">
-        <aside className="col-span-2">
+      <div className="container mx-auto grid size-full grid-cols-12 gap-8">
+        <aside className="col-span-2 h-full overflow-y-auto">
           <h1 className="mb-4 font-display text-2xl">Movies</h1>
-          <ul className="flex flex-col gap-2 text-xl text-light-blue-500">
+          <ul className="text-primary-500 flex flex-col gap-2 text-xl">
             {movieCategories?.map((category: CategoryProps) => (
-              <li key={category.id}>
+              <li key={category.id} className={`text-primary-500 hover:text-primary-700 ${activeCategory?.type === 'movie' && category.id === activeCategory?.id && '!text-accent-400 hover:!text-accent-400'}`}>
                 <button
-                  className={`hover:text-light-blue-700 ${activeCategory?.type === 'movie' && activeCategory?.name === category.name && 'text-accent-teal-400 hover:text-accent-teal-400'}`}
+                  // className={`hover:text-primary-700 ${activeCategory?.type === 'movie' && activeCategory?.name === category.name && 'text-accent-400 hover:text-accent-400'}`}
                   onClick={() => selectCategory(category, 'movie')}
                 >
                   {category.name}
@@ -132,11 +117,11 @@ const CategoriesLayout = ({ children }: CategoriesProps) => {
             ))}
           </ul>
           <h1 className="mb-4 mt-6 font-display text-2xl">TV Series</h1>
-          <ul className="flex flex-col gap-2 text-xl text-light-blue-500">
+          <ul className="text-primary-500 flex flex-col gap-2 text-xl">
             {tvCategories?.map((category: CategoryProps) => (
-              <li key={category.id}>
+              <li key={category.id} className={`text-primary-500 hover:text-primary-700 ${activeCategory?.type === 'tv' && category.id === activeCategory?.id && '!text-accent-400 hover:!text-accent-400'}`}>
                 <button
-                  className={`hover:text-light-blue-700 ${activeCategory?.type === 'tv' && activeCategory?.name === category.name && 'text-accent-teal-400 hover:text-accent-teal-400'}`}
+                  // className={`hover:text-primary-700 ${location.pathname.split('/')[2] === 'tv' && category?.id === parseInt(id ?? '0') && 'text-accent-400 hover:text-accent-400'}`}
                   onClick={() => selectCategory(category, 'tv')}
                 >
                   {category.name}
@@ -145,8 +130,14 @@ const CategoriesLayout = ({ children }: CategoriesProps) => {
             ))}
           </ul>
         </aside>
-        <div className="col-span-10 flex flex-col gap-4 overflow-y-scroll">
-          {children}
+        <div className="col-span-10 flex flex-col gap-4 overflow-y-auto">
+          {movieError && tvError ? <>
+            <h1 className="text-red-500 text-2xl">
+              Something went wrong while fetching categories. Please try again later.
+            </h1>
+          </> : movieLoading || tvLoading ? (
+            <Loading />
+          ) : children}
         </div>
       </div>
     </>

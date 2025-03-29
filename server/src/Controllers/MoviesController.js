@@ -25,7 +25,7 @@ const AddToWatchList = async (req, res) => {
   const { movieId } = req.body;
 
   try {
-    let movie = await Movie.findOne({ movieId });
+    let movie = await Movie.findOne({ movieId: String(movieId) });
 
     if (!movie) {
       const movieData = await fetchMovieFromTMDB(movieId);
@@ -39,13 +39,16 @@ const AddToWatchList = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (user.watchList.some((item) => item.movie.equals(movieId))) {
+    if (user.watchList?.some((item) => item.movie === movieId)) {
+      console.error("Movie already in watchlist", movieId);
       throw new Error("Movie already in watchlist");
     }
 
     if (movie) {
+      console.log("Movie found in the database: ", movie);
       user.watchList.push({
-        movie: movie._id, // Referencing the MongoDB ID of the movie
+        movieId: movie._id,
+        movie: movieId,
         addedAt: new Date(),
         watched: false,
       });
@@ -57,7 +60,11 @@ const AddToWatchList = async (req, res) => {
     }
 
     await user.save();
-    res.status(201).json({ message: "Movie added to watchlist" });
+    res.status(201).json({ message: {
+      movie: movieId,
+      addedAt: new Date(),
+      watched: false,
+    } });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error", error: err });
@@ -69,18 +76,20 @@ const RemoveFromWatchList = async (req, res) => {
   const { movieId } = req.body;
 
   try {
-    const user = await User.findOne({ username }).populate({
-      path: "watchList.movie",
-      model: "Movie",
-    });
+    const user = await User.findOne({ username });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const movie = await Movie.findOne({ movieId });
+    if (!user.watchList.some((item) => item.movie === movieId)) {
+      return res.status(404).json({ message: "Movie not found in watchlist" });
+    }
 
-    user.watchList = user.watchList.filter((item) => !item.movie.equals(movie));
+    user.watchList = user.watchList.filter((item) => item.movie !== movieId);
+    if (user.watchList.length === 0) {
+      user.watchList = [];
+    }
 
     await user.save();
     res.status(200).json({ message: "Movie removed from watchlist" });
@@ -96,7 +105,7 @@ const MarkAsWatched = async (req, res) => {
 
   try {
     const user = await User.findOne({ username }).populate({
-      path: "watchList.movie",
+      path: "watchList.movieId",
       model: "Movie",
     });
 
@@ -167,33 +176,48 @@ const GetWatchList = async (req, res) => {
 
   try {
     const user = await User.findOne({ username }).populate({
-      path: "watchList.movie",
+      path: "watchList.movieId",
       model: "Movie",
+      select: [
+        "movieId",
+        "title",
+        "genres",
+        "vote_average",
+        "vote_count",
+        "overview",
+        "poster_path",
+        "backdrop_path",
+        "release_date",
+        "runtime",
+      ],
     });
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found", data: [] });
     }
 
     const watchList = user.watchList.map((item) => ({
-      movieId: item.movie.movieId,
-      title: item.movie.title,
-      genres: item.movie.genres,
-      vote_average: item.movie.vote_average,
-      vote_count: item.movie.vote_count,
-      overview: item.movie.overview,
-      poster_path: item.movie.poster_path,
-      backdrop_path: item.movie.backdrop_path,
-      release_date: item.movie.release_date,
-      runtime: item.movie.runtime,
+      movieId: item.movieId.movieId,
+      title: item.movieId.title,
+      genres: item.movieId.genres,
+      vote_average: item.movieId.vote_average,
+      vote_count: item.movieId.vote_count,
+      overview: item.movieId.overview,
+      poster_path: item.movieId.poster_path,
+      backdrop_path: item.movieId.backdrop_path,
+      release_date: item.movieId.release_date,
+      runtime: item.movieId.runtime,
       addedAt: item.addedAt,
       watched: item.watched,
     }));
 
-    res.status(200).json({ watchList });
+    if (watchList.length === 0) {
+      return res.status(404).json({ message: "Watchlist is empty", data: [] });
+    }
+    res.status(200).json({ message: "Watchlist fetched successfully", data: watchList });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error", error: err });
   }
 };
 

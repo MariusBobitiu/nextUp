@@ -1,8 +1,8 @@
-import categorizeVideosByType from '@/services/CategorizeVideosByType'
 import React, { useState, useEffect } from 'react'
 import { Video } from '@/types/MovieDetails'
 import { FaPlay as PlayIcon } from 'react-icons/fa'
 import MoviePlayerModal from './MoviePlayerModal'
+import { categorizeVideosByType } from '@/lib/utils'
 
 const VideoSelectionComponent: React.FC<{ videos: Video[] }> = ({ videos }) => {
   const [selectedType, setSelectedType] = useState<string>('')
@@ -30,7 +30,7 @@ const VideoSelectionComponent: React.FC<{ videos: Video[] }> = ({ videos }) => {
           <button
             key={type}
             onClick={() => setSelectedType(type)}
-            className={`hover:text-light-blue-500 ${selectedType === type ? 'border-b border-accent-teal' : ''}`}
+            className={`hover:text-primary-500 ${selectedType === type ? 'border-b border-accent-teal' : ''}`}
           >
             {type} ({videoMap.get(type)?.length})
           </button>
@@ -39,7 +39,7 @@ const VideoSelectionComponent: React.FC<{ videos: Video[] }> = ({ videos }) => {
       <div className="flex flex-col items-start justify-start gap-4">
         {videoMap.get(selectedType)?.map((video) => (
           <div
-            className={`relative my-4 flex h-80 w-full gap-8 rounded-lg bg-navy-600 p-4`}
+            className={`relative my-4 flex h-80 w-full gap-8 rounded-lg bg-secondary-700 p-4`}
             key={video.id}
           >
             <img
@@ -50,7 +50,7 @@ const VideoSelectionComponent: React.FC<{ videos: Video[] }> = ({ videos }) => {
             <a
               href={`#player-${video.id}`}
               rel="noreferrer"
-              className="absolute left-0 top-0 flex h-full w-1/3 items-center justify-center text-light-blue-200 hover:text-accent-teal"
+              className="absolute left-0 top-0 flex h-full w-1/3 items-center justify-center text-primary-200 hover:text-accent"
               onClick={() => {
                 setVideoTitle(video.name)
                 setVideoKey(video.key)
@@ -60,7 +60,7 @@ const VideoSelectionComponent: React.FC<{ videos: Video[] }> = ({ videos }) => {
             </a>
             <div className="flex w-2/3 flex-col">
               <h3 className="text-3xl font-semibold">{video.name}</h3>
-              <p className="text-light-blue-200">
+              <p className="text-primary-200">
                 {video.type} ● {video.site} ● {video.published_at.slice(0, 10)}
               </p>
             </div>

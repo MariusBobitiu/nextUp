@@ -23,7 +23,7 @@ const AiPoweredSearch = () => {
         </Suspense>
       </main>
 
-      <div className="absolute left-0 top-0 z-40 flex h-screen w-full items-center justify-center overflow-hidden bg-gradient-to-b from-navy-800 to-navy-700">
+      <div className="absolute left-0 top-0 z-40 flex h-screen w-full items-center justify-center overflow-hidden bg-gradient-to-b from-secondary-800 to-secondary-800">
         <h1>
           This feature is currently under development. Please check back later!
         </h1>

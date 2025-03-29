@@ -1,12 +1,7 @@
 import VerticalCarousel from '@/components/VerticalCarousel'
+import { paragraphs } from '@/lib/consts'
 
 const Loading = () => {
-  const paragraphs = [
-    'Fetching records.',
-    'Sorting records.',
-    'Rendering records.',
-    'Displaying records.',
-  ]
 
   return (
     <>

@@ -1,6 +1,6 @@
 import TinderCard from 'react-tinder-card'
 import placeholder from '@/assets/placeholder.jpg'
-import { getMovieGenre, getTVGenre } from '@/services/getGenre'
+import { getMovieGenre, getTVGenre } from '@/lib/utils'
 
 type Direction = 'left' | 'right' | 'up' | 'down'
 
@@ -16,18 +16,18 @@ type SwiperCardProps = {
     poster_path: string
     genre_ids: number[]
   }
-  onSwipe: (id: number, dir: Direction) => void
+  onSwipe: (dir: Direction) => void
 }
 
 const SwiperCard = ({ movie, onSwipe }: SwiperCardProps) => {
   return (
     <TinderCard
-      onSwipe={(dir) => onSwipe(movie.id as number, dir)}
+      onSwipe={(dir) => onSwipe(dir)}
       preventSwipe={['up', 'down']}
     >
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
         <div
-          className={`relative flex h-[400px] w-[300px] cursor-pointer flex-col rounded-lg border border-navy-600 bg-navy-700 transition-colors duration-500 ease-in-out hover:border-accent-teal-700`}
+          className={`relative flex h-[400px] w-[300px] cursor-pointer flex-col rounded-lg border border-secondary-700 bg-secondary-800 transition-colors duration-500 ease-in-out hover:border-accent-teal-700`}
         >
           <div className="relative left-0 top-0 h-3/5 w-full rounded-t-lg">
             <img
@@ -41,7 +41,7 @@ const SwiperCard = ({ movie, onSwipe }: SwiperCardProps) => {
               alt="image placeholder"
               className="h-full w-full rounded-t-lg bg-center object-cover brightness-[0.70]"
             />
-            <div className="absolute left-0 top-0 h-full w-full rounded-t-lg bg-gradient-to-t from-navy-700 to-transparent" />
+            <div className="absolute left-0 top-0 h-full w-full rounded-t-lg bg-gradient-to-t from-secondary-800 to-transparent" />
           </div>
           <div className="absolute bottom-2 left-0 z-10 h-2/3 w-full p-4">
             <h1 className="-mt-4 font-display text-2xl font-extrabold">

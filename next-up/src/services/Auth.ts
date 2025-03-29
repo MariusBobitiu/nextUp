@@ -36,7 +36,7 @@ export const signIn = async (formData: SignInData) => {
         const data = await response.json()
         if (!response.ok) {
             console.error("Sign in failed", data);
-            return { success: false, error: data.error || 'Signin Failed'};
+            return { success: false, error: data.message || 'Signin Failed'};
         }
         return { success: true, user: data.user };
     } catch (error) {

@@ -42,8 +42,8 @@ const ForgotPassword = () => {
   return (
     <>
       <div className="flex h-full w-full items-center justify-center gap-16">
-        <div className="relative flex h-full w-2/5 items-center justify-center shadow-xl">
-          <div className="absolute z-0 h-2/5 w-3/5 rounded-full bg-navy-500 blur-2xl" />
+        <div className="relative flex h-full w-2/5 items-center justify-center">
+          <div className="absolute z-0 h-2/5 w-3/5 rounded-full bg-secondary-700 blur-2xl" />
           <img
             src={Scene}
             alt="Forgot Password"
@@ -55,21 +55,21 @@ const ForgotPassword = () => {
             <Loader />
           ) : resetLinkSent ? (
             <div className="flex flex-col items-start justify-center gap-2">
-              <h1 className="text-5xl font-bold text-light-blue-200">
+              <h1 className="text-5xl font-bold text-primary-200">
                 Reset link sent
-                <span className="text-accent-teal">.</span>
+                <span className="text-accent">.</span>
               </h1>
-              <p className="text-xl text-light-blue-400">
+              <p className="text-xl text-primary-400">
                 Please check your email to reset your password.
               </p>
             </div>
           ) : (
             <div className="flex flex-col items-start justify-center gap-2">
-              <h1 className="text-5xl font-bold text-light-blue-200">
+              <h1 className="text-5xl font-bold text-primary-200">
                 Forgot your password?
-                <span className="text-accent-teal">.</span>
+                <span className="text-accent">.</span>
               </h1>
-              <p className="text-xl text-light-blue-400">
+              <p className="text-xl text-primary-400">
                 Enter your email below to reset your password.
               </p>
               <Input
@@ -82,7 +82,7 @@ const ForgotPassword = () => {
                 className="w-full"
               />
               <button
-                className="mt-4 self-center rounded-lg bg-accent-teal px-8 py-3 text-xl font-bold text-white focus:outline-none"
+                className="mt-4 self-center rounded-lg bg-accent px-8 py-3 text-xl font-bold text-white focus:outline-none"
                 onClick={sendResetLink}
               >
                 Send Reset Link
@@ -101,7 +101,7 @@ const Loader = () => {
       <div className="h-16 w-16 animate-pulse">
         <img src={Logo} alt="Logo" className="h-full w-full" />
       </div>
-      <p className="animate-pulse text-2xl font-bold text-light-blue">
+      <p className="animate-pulse text-2xl font-bold text-primary">
         Sending...
       </p>
     </div>
