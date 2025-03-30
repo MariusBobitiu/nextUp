@@ -8,8 +8,8 @@ import Home from '@/pages/Home'
 import Categories from '@/pages/Categories'
 import MovieCategory from '@/pages/MovieCategory'
 import TVCategory from '@/pages/TVCategory'
-import Swiper from '@/pages/Swiper'
-import AiPoweredSearch from '@/pages/AiPoweredSearch'
+// import Swiper from '@/pages/Swiper'
+// import AiPoweredSearch from '@/pages/AiPoweredSearch'
 import Layout from '@/components/layout/Layout'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import Search from '@/pages/Search'
@@ -27,6 +27,7 @@ import MovieDetailsImages from '@/pages/MovieDetailsImages'
 import MovieDetailsPosters from '@/pages/MovieDetailsPosters'
 import { Suspense } from 'react'
 import Loading from '@/components/layout/Loading'
+import Settings from '@/pages/Settings'
 
 const queryClient = new QueryClient()
 
@@ -75,10 +76,11 @@ const App = () => {
 
                 {/* USER */}
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/settings" element={<Settings />} />
 
                 {/* LATER IMPLEMENTATION */}
-                <Route path="/swiper" element={<Swiper />} />
-                <Route path="/ai-powered-search" element={<AiPoweredSearch />} />
+                {/* <Route path="/swiper" element={<Swiper />} />
+                <Route path="/ai-powered-search" element={<AiPoweredSearch />} /> */}
               </Routes>
             </Layout>
           </Router>

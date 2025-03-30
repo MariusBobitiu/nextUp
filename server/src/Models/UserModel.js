@@ -39,12 +39,10 @@ const userSchema = new mongoose.Schema(
       movieId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Movie",
-        required: [true, "Movie ID is required"],
       },
       movie: {
         type: Number,
-        required: [true, "Movie tmdb id is required"],
-        unique: true,
+        // unique: true,
         // ref: "Movie",
       },
       addedAt: {
@@ -55,14 +53,14 @@ const userSchema = new mongoose.Schema(
         type: Boolean,
         default: false,
       },
-  }],
+    }],
   },
   { timestamps: true }
 );
 
 userSchema.pre("save", async function () {
   if (this.isModified("password")) {
-    this.password = await bcrypt.hash(
+    this.password = bcrypt.hash(
       this.password,
       Number(process.env.SALT_ROUNDS) || 10
     );

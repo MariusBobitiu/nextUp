@@ -26,7 +26,7 @@ router.put("/:username/update-password", UpdatePassword);
 router.post("/verify-token", VerifyToken);
 
 // Delete User
-router.delete("/:username/delete-user", DeleteUser);
+router.delete("/:username", DeleteUser);
 
 // Logout
 router.get("/:username/logout", Logout);

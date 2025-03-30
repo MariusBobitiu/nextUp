@@ -140,7 +140,7 @@ const GetWatchList = async (req, res) => {
     }));
 
     if (watchList.length === 0) {
-      return res.status(404).json({ message: "Watchlist is empty", data: [] });
+      return res.status(200).json({ message: "Watchlist is empty", data: [] });
     }
     return res.status(200).json({ message: "Watchlist fetched successfully", data: watchList });
   } catch (err) {

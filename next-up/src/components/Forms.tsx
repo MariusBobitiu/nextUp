@@ -53,7 +53,7 @@ export const SignUpForm = () => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
-  };
+  }
 
   useEffect(() => {
     // Reset error state when form data changes
@@ -75,32 +75,53 @@ export const SignUpForm = () => {
         message: '',
       },
     })
-  }, [formData]);
+  }, [formData])
 
   const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (formData.username === '' || formData.username.length < 3) {
-      setError({ ...error, username: { invalid: true, message: "Username too short."} })
-      return;
+      setError({
+        ...error,
+        username: { invalid: true, message: 'Username too short.' },
+      })
+      return
     }
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
     if (formData.email === '' || !emailRegex.test(formData.email)) {
-      setError({...error, email: { invalid: true, message: "Invalid email address."} })
-      return;
+      setError({
+        ...error,
+        email: { invalid: true, message: 'Invalid email address.' },
+      })
+      return
     }
     if (formData.password.length < 8) {
-      setError({...error, password: { invalid: true, message: "Password too short."} })
-      return;
+      setError({
+        ...error,
+        password: { invalid: true, message: 'Password too short.' },
+      })
+      return
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError({...error, password: { invalid: true, message: "Passwords do not match."} })
-      setError({...error, confirmPassword: { invalid: true, message: "Passwords do not match."} })
-      return;
+      setError({
+        ...error,
+        password: { invalid: true, message: 'Passwords do not match.' },
+      })
+      setError({
+        ...error,
+        confirmPassword: { invalid: true, message: 'Passwords do not match.' },
+      })
+      return
     }
     if (formData.confirmPassword === '') {
-      setError({...error, confirmPassword: { invalid: true, message: "Please confirm your password."} })
-      return;
+      setError({
+        ...error,
+        confirmPassword: {
+          invalid: true,
+          message: 'Please confirm your password.',
+        },
+      })
+      return
     }
 
     console.log(formData)
@@ -194,7 +215,7 @@ export const SignUpForm = () => {
           />
           <button
             type="submit"
-            className="mt-4 w-full rounded-xl bg-gradient-to-b from-accent-400 to-accent-700 hover:brightness-90 active:brightness-75 px-4 py-2 text-xl font-semibold text-primary-200 transition-all duration-300 ease-in-out hover:bg-accent-700 focus:outline-none active:bg-accent-800"
+            className="mt-4 w-full rounded-xl bg-gradient-to-b from-accent-400 to-accent-700 px-4 py-2 text-xl font-semibold text-primary-200 transition-all duration-300 ease-in-out hover:bg-accent-700 hover:brightness-90 focus:outline-none active:bg-accent-800 active:brightness-75"
           >
             Sign Up
           </button>
@@ -214,11 +235,11 @@ export const SignInForm = () => {
     email: {
       invalid: boolean
       message: string
-    },
+    }
     username: {
       invalid: boolean
       message: string
-    },
+    }
     password: {
       invalid: boolean
       message: string
@@ -250,10 +271,10 @@ export const SignInForm = () => {
         setFormData({ ...formData, username: e.target.value, email: '' })
       }
 
-      return;
+      return
     }
     setFormData({ ...formData, [e.target.name]: e.target.value })
-  };
+  }
 
   const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -261,25 +282,42 @@ export const SignInForm = () => {
 
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
     if (formData.email === '' && formData.username === '') {
-      setError({ ...error, email: { invalid: true, message: 'Please enter your email or username.' } })
+      setError({
+        ...error,
+        email: {
+          invalid: true,
+          message: 'Please enter your email or username.',
+        },
+      })
       return
     }
     if (formData.email !== '' && !emailRegex.test(formData.email)) {
-      setError({ ...error, email: { invalid: true, message: 'Invalid email address.' } })
+      setError({
+        ...error,
+        email: { invalid: true, message: 'Invalid email address.' },
+      })
       return
     }
-    if (formData.username !== '' && formData.username.length < 3) { 
-      setError({ ...error, username: { invalid: true, message: 'Username too short.' } })
+    if (formData.username !== '' && formData.username.length < 3) {
+      setError({
+        ...error,
+        username: { invalid: true, message: 'Username too short.' },
+      })
       return
     }
-
 
     if (formData.password === '' || formData.password.length < 8) {
-      setError({ ...error, password: { invalid: true, message: 'Password too short.' } })
+      setError({
+        ...error,
+        password: { invalid: true, message: 'Password too short.' },
+      })
       return
     }
     if (formData.password === '') {
-      setError({ ...error, password: { invalid: true, message: 'Please enter your password.' } })
+      setError({
+        ...error,
+        password: { invalid: true, message: 'Please enter your password.' },
+      })
       return
     }
     console.log(formData)
@@ -289,16 +327,25 @@ export const SignInForm = () => {
       if (response.error) {
         if (response.error === 'User not found') {
           if (formData.email !== '') {
-            setError({ ...error, email: { invalid: true, message: 'Email not found.' } })
+            setError({
+              ...error,
+              email: { invalid: true, message: 'Email not found.' },
+            })
           }
           if (formData.username !== '') {
-            setError({ ...error, username: { invalid: true, message: 'Username not found.' } })
+            setError({
+              ...error,
+              username: { invalid: true, message: 'Username not found.' },
+            })
           }
         } else if (response.error === 'Invalid credentials') {
-          setError({ ...error, password: { invalid: true, message: 'Invalid password.' } })
+          setError({
+            ...error,
+            password: { invalid: true, message: 'Invalid password.' },
+          })
         }
       }
-      return;
+      return
     }
     setFormData({
       email: '',
@@ -326,7 +373,7 @@ export const SignInForm = () => {
         message: '',
       },
     })
-  }, [formData]);
+  }, [formData])
 
   return (
     <>
@@ -387,7 +434,7 @@ export const SignInForm = () => {
               Remember me
             </label>
             <p className="text-sm text-primary-300">
-              Forgot your password?{" "}
+              Forgot your password?{' '}
               <a
                 href="/forgot-password"
                 className="text-sm text-accent hover:underline focus:outline-none"

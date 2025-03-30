@@ -121,7 +121,7 @@ const UpdateUser = async (req, res) => {
 
     await user.save();
 
-    return res.status(200).json({ message: 'User updated successfully' });
+    return res.status(200).json({ message: 'User updated successfully', user });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -135,15 +135,17 @@ const UpdatePassword = async (req, res) => {
     const { currentPassword, newPassword } = req.body;
 
     if (!user) {
+      console.log("User not found");
       return res.status(404).json({ message: 'User not found' });
     }
 
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
+      console.log("Invalid credentials");
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    user.password = newPassword;
+    user.password = bcrypt.hashSync(newPassword, Number(process.env.SALT_ROUNDS) || 10);
 
     await user.save();
 
