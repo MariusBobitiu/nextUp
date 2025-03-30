@@ -110,7 +110,7 @@ const UpdateUser = async (req, res) => {
   const user = await User.findOne({ username });
 
   try {
-    const { email, username, profilePicture } = req.body;
+    const { email, username } = req.body;
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -118,7 +118,6 @@ const UpdateUser = async (req, res) => {
 
     if (email) user.email = email;
     if (username) user.username = username;
-    if (profilePicture) user.profilePicture = profilePicture;
 
     await user.save();
 

@@ -19,9 +19,9 @@ app.use(express.json());
 
 // Allow CORS
 app.use(cors({
-  origin: process.env.CLIENT_URL,  // Allow requests from your frontend URL
-  credentials: true,        // If you're using cookies or authentication headers
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow these methods
+  origin: process.env.CLIENT_URL,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
 }));
 
 app.use("/auth", authRoute);
