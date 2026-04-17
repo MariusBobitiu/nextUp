@@ -1,9 +1,7 @@
 import { useParams } from 'react-router-dom'
 
 const TvDetails = () => {
-  const { slug } = useParams()
-  const tvId = slug?.split('-').reverse().pop()
-  console.log(tvId)
+  useParams()
 
   return (
     <>

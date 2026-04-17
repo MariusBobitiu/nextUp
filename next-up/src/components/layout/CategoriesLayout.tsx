@@ -47,11 +47,6 @@ const CategoriesLayout = ({ children }: CategoriesProps) => {
   const location = useLocation();
   const { id } = useParams<{ id: string }>()
 
-  useEffect(() => {
-    console.log("Location: ", location.pathname)
-    console.log("ID: ", id)
-  }, [location.pathname, id])
-
   const [activeCategory, setActiveCategory] = useState<ActiveCategory | null>(
     null
   )
@@ -77,15 +72,10 @@ const CategoriesLayout = ({ children }: CategoriesProps) => {
     if (!movieCategories || !tvCategories) return;
 
     const categoryId = id;
-    const categoryType = location.pathname.split('/')[2]; // 'movie' or 'tv'
+    const categoryType = location.pathname.split('/')[2];
     const categories = categoryType === 'movie' ? movieCategories : tvCategories;
     const category = categories.find((cat) => cat.id === Number(categoryId));
-    console.group('Category');
-      console.log('Category ID:', categoryId);
-      console.log('Category Type:', categoryType);
-      console.log('Categories:', categories);
-      console.log('Category:', category);
-    console.groupEnd();
+
     if (category) {
       setActiveCategory({ id: category.id, name: category.name, type: categoryType as 'movie' | 'tv' });
       document.title = `Next Up - Categories | ${category.name}`;

@@ -12,13 +12,11 @@ import { getTVGenre } from '@/lib/utils'
 const TVCategory = () => {
   const categoryId = Number(useParams().id)
   const categoryName = getTVGenre(categoryId)
-  console.log('TV Category ID:', categoryId)
   const [page, setPage] = useState<number>(1)
   const [movieId, setMovieId] = useState<number>(0)
 
   const fetchTVShows = async (page: number) => {
     const apiUrl = `${import.meta.env.VITE_TMDB_API_BASE_URL}/discover/tv?with_genres=${categoryId}&page=${page}&api_key=${import.meta.env.VITE_TMDB_API_KEY}`
-    console.log('Fetching TV shows by category:', apiUrl)
 
     const res = await fetch(apiUrl)
     if (!res.ok) {
@@ -57,7 +55,6 @@ const TVCategory = () => {
   })
 
   const openModal = (id: number) => () => {
-    console.log(`Opening Modal for id: ${id}`)
     setMovieId(id)
   }
 

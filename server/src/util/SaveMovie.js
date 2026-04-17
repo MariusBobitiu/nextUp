@@ -18,7 +18,7 @@ const saveMovie = async (movie) => {
     await newMovie.save();
     return newMovie;
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 }
 

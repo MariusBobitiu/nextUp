@@ -99,7 +99,6 @@ const ChangePasswordModal = (props: Props) => {
 		},
 		onError: (err) => {
 			// Handle error (e.g., show an error message)
-			console.error('Error changing password:', err);
 			if ((err as Error).message === 'Invalid credentials') {
 				setOldPasswordError({
 					invalid: true,

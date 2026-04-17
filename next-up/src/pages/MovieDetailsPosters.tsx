@@ -7,7 +7,6 @@ import { TbArrowBarToLeft as ArrowBackIcon } from "react-icons/tb";
 const MovieDetailsPosters = () => {
     const { slug } = useParams<{ slug: string }>()
     const movieId = slug?.split('-')[0]
-    console.log(movieId)
 
     const {data: movie } = useQuery('movie', () => fetchMovie(movieId || ''), {
         enabled: !!movieId

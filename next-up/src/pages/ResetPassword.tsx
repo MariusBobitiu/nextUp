@@ -41,7 +41,6 @@ const ResetPassword = () => {
         }
         setTokenValid(true)
       } catch (error) {
-        console.error(error)
       }
       setIsPageLoading(false)
     }
@@ -50,7 +49,6 @@ const ResetPassword = () => {
   }, [token])
 
   const resetPassword = async () => {
-    console.log(newPassword, confirmPassword, token)
     try {
       const response = await fetch(
         `${import.meta.env.VITE_SV_API_BASE_URL}/users/reset-password`,
@@ -68,7 +66,6 @@ const ResetPassword = () => {
         throw new Error('Failed to reset password')
       }
     } catch (error) {
-      console.error(error)
     }
     setIsLoading(false)
   }

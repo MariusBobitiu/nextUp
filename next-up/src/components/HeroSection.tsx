@@ -10,7 +10,6 @@ const HeroSection = () => {
       const data = await response.json()
       return data.results
     } catch (err) {
-      console.error(err)
     }
   }
 
@@ -25,7 +24,6 @@ const HeroSection = () => {
   }
 
   if (error) {
-    console.error(error)
     return <div>Error loading popular movies</div>
   }
 

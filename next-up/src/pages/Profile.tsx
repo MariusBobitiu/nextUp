@@ -15,7 +15,6 @@ const Profile = () => {
     if (user) {
       setIsAuthenticated(true)
     }
-    // console.log(user)
   }, [user])
 
   const {
@@ -32,7 +31,6 @@ const Profile = () => {
 
   if (error) return <h1>Error</h1>
 
-  console.log('Movies in watchlist', watchList)
 
   return (
     <>

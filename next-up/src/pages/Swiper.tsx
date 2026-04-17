@@ -27,9 +27,7 @@ const Swiper = () => {
 
   useEffect(() => {
     if (lastDirection === 'left') {
-      console.log('You liked the movie!')
     } else if (lastDirection === 'right') {
-      console.log('You disliked the movie!')
     }
   }, [lastDirection])
 
@@ -52,7 +50,6 @@ const Swiper = () => {
             movie={movie}
             onSwipe={onSwipe}
             onClick={() => {
-              console.log('Clicked!')
             }}
           />
         ))}

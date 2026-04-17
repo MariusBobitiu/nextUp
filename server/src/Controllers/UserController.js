@@ -66,40 +66,34 @@ const ResetPassword = async (req, res) => {
   const {token, newPassword } = req.body;
 
   if (!token) {
-    console.log("Authentication error");
     return res.status(401).json({ message: 'Authentication error' });
   }
 
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
       if (err) {
-        console.log("Token expired or invalid");
         return res.status(401).json({ message: 'Token expired or invalid' });
       }
 
       try {
         const user = await User.findOne({ resetLink: token });
-        console.log("User found: ", user)
-
         if (!user) {
-          console.log("User not found");
           return res.status(404).json({ message: 'User not found' });
         }
 
-        user.password = newPassword;
+        const hashedPassword = await bcrypt.hash(newPassword, Number(process.env.SALT_ROUNDS) || 10);
+        user.password = hashedPassword;
         user.resetLink = '';
 
         await user.save();
-        console.log("Password reset successfully");
 
         return res.status(200).json({ message: 'Password reset successfully' });
       } catch (error) {
-        console.log("Error resetting password: ", error.message)
+        console.error('Error resetting password:', error);
         return res.status(500).json({ error: error.message });
       }
     });
   } else {
-    console.log("Authentication error");
     return res.status(401).json({ message: 'Authentication error' });
   }
 }
@@ -123,6 +117,7 @@ const UpdateUser = async (req, res) => {
 
     return res.status(200).json({ message: 'User updated successfully', user });
   } catch (error) {
+    console.error('Error updating user:', error);
     return res.status(500).json({ error: error.message });
   }
 }
@@ -135,13 +130,11 @@ const UpdatePassword = async (req, res) => {
     const { currentPassword, newPassword } = req.body;
 
     if (!user) {
-      console.log("User not found");
       return res.status(404).json({ message: 'User not found' });
     }
 
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-      console.log("Invalid credentials");
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
@@ -160,14 +153,12 @@ const DeleteUser = async (req, res) => {
   try {
     const result = await User.deleteOne({ username: req.params.username });
     if (result.deletedCount === 0) {
-      console.log("User not found");
       return res.status(404).json({ message: 'User not found' });
     } else {
-      console.log("User deleted successfully")
       return res.status(200).json({ message: 'User deleted successfully' });
     }
   } catch (error) {
-    console.error("Error deleting user: ", error.message);
+    console.error('Error deleting user:', error);
     return res.status(500).json({ error: error.message });
   }
 }
@@ -178,6 +169,8 @@ const Logout = async (req, res) => {
     res.clearCookie('token');
     return res.status(200).json({ message: 'User logged out successfully' });
   } catch (error) {
+    console.error('Error logging out user:', error);
+
     return res.status(500).json({ error: error.message });
   }
 }

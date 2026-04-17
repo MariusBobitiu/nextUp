@@ -20,7 +20,6 @@ const Category = () => {
 
   const fetchMovies = async (page: number) => {
     const apiUrl = `${import.meta.env.VITE_TMDB_API_BASE_URL}/discover/movie?with_genres=${categoryId}&page=${page}&api_key=${import.meta.env.VITE_TMDB_API_KEY}`
-    console.log('Fetching movies by category:', apiUrl)
 
     const res = await fetch(apiUrl)
     if (!res.ok) {
@@ -60,7 +59,6 @@ const Category = () => {
     return <div className="w-full text-center">Error fetching categories!</div>
 
   const openModal = (id: number) => () => {
-    console.log(`Opening Modal for id: ${id}`)
     setMovieId(id)
   }
 

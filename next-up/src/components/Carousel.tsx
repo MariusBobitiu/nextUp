@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Pagination } from 'swiper/modules'
 import SwiperCore from 'swiper'
@@ -39,10 +39,6 @@ const Carousel = () => {
     enabled: true,
   })
 
-  useEffect(() => {
-    console.log('Movies:', movies)
-  }, [movies])
-
   const onSlideChange = (swiper: SwiperCore) => {
     const slides = swiper.slides
     const activeIndex = swiper.activeIndex
@@ -64,7 +60,6 @@ const Carousel = () => {
   }
 
   const openModal = (id: number, type: 'movie' | 'tv') => {
-    console.log('Opening modal:', id, type)
     setMovieId(id)
     setMovieType(type)
   }

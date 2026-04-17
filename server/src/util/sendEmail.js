@@ -1,17 +1,15 @@
 import dotenv from "dotenv";
-import sgMail from "@sendgrid/mail";
+import { Resend } from 'resend';
 
 dotenv.config();
 
-sgMail.setApiKey(process.env.SG_API_KEY);
-console.log(process.env.SG_API_KEY);
-console.log(process.env.EMAIL_FROM);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendEmail = async (user, token) => {
   const msg = {
-    to: user.email,
     from: process.env.EMAIL_FROM,
-    subject: "Password Reset",
+    to: user.email,
+    subject: "Password Reset Request",
     text: `
     Hello, ${user.username}
     We have sent you this email in response to your request to reset your password. To reset your password, please follow the link:${process.env.CLIENT_URL}/reset-password/${token}
@@ -247,11 +245,8 @@ const sendEmail = async (user, token) => {
   };
 
   try {
-    await sgMail.send(msg).then(() => {
-      console.log("Email sent");
-    });
+    await resend.emails.send(msg);
   } catch (error) {
-    console.error("Error sending email:", error.response ? error.response.body : error);
   }
 };
 

@@ -9,11 +9,10 @@ import { paragraphs } from '@/lib/consts';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '@/features/user/userSlice';
 import { fetchUserWatchlist } from '@/lib/fetchData';
-import { addToWatchlist, removeFromWatchList } from '@/lib/watchlist';
+import { addToWatchlist, removeFromWatchlist } from '@/lib/watchlist';
 
 const fetchMovies = async (id: number, type: 'tv' | 'movie' | 'person') => {
   const apiUrl = `${import.meta.env.VITE_TMDB_API_BASE_URL}/${type}/${id}?language=en-UK&api_key=${import.meta.env.VITE_TMDB_API_KEY}`
-  console.log('Fetching movie:', apiUrl)
 
   const res = await fetch(apiUrl)
   if (!res.ok) {
@@ -26,7 +25,6 @@ const fetchMovies = async (id: number, type: 'tv' | 'movie' | 'person') => {
 
 const fetchWatchProviders = async (id: number, type: 'tv' | 'movie' | 'person') => {
   const apiUrl = `${import.meta.env.VITE_TMDB_API_BASE_URL}/${type}/${id}/watch/providers?api_key=${import.meta.env.VITE_TMDB_API_KEY}`;
-  console.log('Fetching watch providers:', apiUrl)
 
   const res = await fetch(apiUrl)
   if (!res.ok) {
@@ -38,7 +36,6 @@ const fetchWatchProviders = async (id: number, type: 'tv' | 'movie' | 'person') 
 }
 const fetchCast = async (id: number, type: 'tv' | 'movie' | 'person') => {
   const apiUrl = `${import.meta.env.VITE_TMDB_API_BASE_URL}/${type}/${id}/credits?api_key=${import.meta.env.VITE_TMDB_API_KEY}`;
-  console.log('Fetching cast:', apiUrl)
 
   const res = await fetch(apiUrl)
   if (!res.ok) {
@@ -82,12 +79,9 @@ const MovieModal = ({ id, type, onClose }: MovieModalProps) => {
   })
 
   useEffect(() => {
-    console.log('Watchlist:', watchlist)
     if (watchlist?.some((m: { movieId: number }) => m.movieId === id)) {
-      console.log("Movie is bookmarked")
       setBookmarked(true)
     } else {
-      console.log("Movie is not bookmarked")
       setBookmarked(false)
     }
   }, [watchlist, id])
@@ -103,13 +97,11 @@ const MovieModal = ({ id, type, onClose }: MovieModalProps) => {
     mutationKey: ['addToWatchlist'],
     mutationFn: async (movieId: number) => addToWatchlist(user?.username, movieId),
     onSuccess: (data) => {
-      console.log('Movie added to watchlist:', data)
       dispatch(setUser({ ...user, watchList: [...user.watchList, data] })) 
       queryClient.invalidateQueries(['watchlist', user?.username])
       setBookmarked(true)
     },
-    onError: (error) => {
-      console.error('Error adding movie to watchlist:', error)
+    onError: () => {
       alert('Error adding movie to watchlist. Please try again.')
       queryClient.invalidateQueries(['watchlist', user?.username])
     },
@@ -117,29 +109,25 @@ const MovieModal = ({ id, type, onClose }: MovieModalProps) => {
 
   const deleteMutation = useMutation({
     mutationKey: ['deleteFromWatchlist'],
-    mutationFn: async (movieId: number) => removeFromWatchList(user?.username, movieId),
-    onSuccess: (data) => {
-      console.log('Movie removed from watchlist:', data)
+    mutationFn: async (movieId: number) => removeFromWatchlist(user?.username, movieId),
+    onSuccess: () => {
       dispatch(setUser({ ...user, watchList: user.watchList.filter((m: { movieId: number }) => m.movieId !== id) })) 
       queryClient.invalidateQueries(['watchlist', user?.username])
       setBookmarked(false)
     },
-    onError: (error) => {
-      console.error('Error removing movie from watchlist:', error)
+    onError: () => {
       alert('Error removing movie from watchlist. Please try again.')
       queryClient.invalidateQueries(['watchlist', user?.username])
     }
   })
 
   const onAddToWatchlist = () => {
-    console.log('Added to watchlist')
     if (user) {
       if (bookmarked) {
         deleteMutation.mutate(id);
         return
       }
 
-      console.log('Adding movie to watchlist:', id)
       addMutation.mutate(id)
     } else {
       alert("Please sign in to add to your watchlist.")

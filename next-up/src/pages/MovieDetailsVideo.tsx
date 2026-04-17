@@ -8,7 +8,6 @@ import VideoSelectionComponent from '@/components/VideoSelection';
 const MovieDetailsVideo = () => {
     const { slug } = useParams<{ slug: string }>()
     const movieId = slug?.split('-')[0]
-    console.log(movieId)
 
     const {data: movie } = useQuery('movie', () => fetchMovie(movieId || ''), {
         enabled: !!movieId

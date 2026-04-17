@@ -45,8 +45,6 @@ const Search = () => {
   }, [term])
 
   useEffect(() => {
-    console.log('Page changed:', page)
-    console.log('Search term:', term)
   }, [page, term])
 
   const handlePageChange = (newPage: number) => {
@@ -58,7 +56,6 @@ const Search = () => {
 
   const fetchMoviesByTerm = async (page: number, searchTerm: string) => {
     const apiUrl = `${import.meta.env.VITE_TMDB_API_BASE_URL}/search/multi?query=${searchTerm}&language=en-UK&page=${page}&api_key=${import.meta.env.VITE_TMDB_API_KEY}`
-    console.log('Fetching movies by term:', apiUrl)
 
     const res = await fetch(apiUrl)
     if (!res.ok) {
@@ -91,7 +88,6 @@ const Search = () => {
   }, [term])
 
   const openModal = (id: number, type: 'movie' | 'tv') => {
-    console.log(`Opening Modal for id: ${id}`)
     setMovieType(type)
     setMovieId(id)
   }

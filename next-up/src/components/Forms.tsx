@@ -124,10 +124,8 @@ export const SignUpForm = () => {
       return
     }
 
-    console.log(formData)
     const response = await signUp(formData)
     if (!response.success) {
-      console.error(response)
       return
     }
 
@@ -278,7 +276,6 @@ export const SignInForm = () => {
 
   const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log(formData)
 
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
     if (formData.email === '' && formData.username === '') {
@@ -320,10 +317,8 @@ export const SignInForm = () => {
       })
       return
     }
-    console.log(formData)
     const response = await signIn(formData)
     if (!response.success) {
-      console.error('Sign in failed', response)
       if (response.error) {
         if (response.error === 'User not found') {
           if (formData.email !== '') {
@@ -352,7 +347,6 @@ export const SignInForm = () => {
       username: '',
       password: '',
     })
-    console.log(response)
     dispatch(setUser(response.user))
     navigate('/')
   }

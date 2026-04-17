@@ -6,7 +6,6 @@ const AiForm = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log('Form submitted:', text)
   }
 
   return (

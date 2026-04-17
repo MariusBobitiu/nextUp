@@ -15,7 +15,6 @@ const Navbar: React.FC<{
   const pathname = window?.location.pathname
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const user = useSelector((state: userState) => state.user.user)
-  // console.log(user)/
 
   const [dropdownVisible, setDropdownVisible] = useState(false)
   const toggleDropdown = () => {

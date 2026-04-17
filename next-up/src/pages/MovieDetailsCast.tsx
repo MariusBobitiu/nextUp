@@ -9,7 +9,6 @@ import { TbArrowBarToLeft as ArrowBackIcon } from "react-icons/tb";
 const MovieDetailsCast = () => {
     const { slug } = useParams()
     const movieId = slug?.split('-').reverse().pop()
-    console.log("Movie ID: ", movieId)
 
     const { data: movie, isLoading, isError } = useQuery('movie', () => fetchMovie(movieId || ''), {
         enabled: !!movieId,

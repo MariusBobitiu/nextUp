@@ -8,9 +8,6 @@ const AudioRecorder = () => {
 
   const startRecording = async () => {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      console.error(
-        'Browser API navigator.mediaDevices.getUserMedia not available'
-      )
       return
     }
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true })

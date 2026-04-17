@@ -38,7 +38,6 @@ const MoviePlayerModal = ({
   }, [setVideoKey, videoKey, videoTitle])
 
   useEffect(() => {
-    console.log(videoKey, videoTitle)
   }, [videoKey, videoTitle])
 
   return (

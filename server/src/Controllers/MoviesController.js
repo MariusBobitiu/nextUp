@@ -2,20 +2,17 @@ import User from "../Models/UserModel.js";
 import Movie from "../Models/MovieModel.js";
 import SaveMovie from "../util/SaveMovie.js";
 import dotenv from "dotenv";
-import fetch from "node-fetch";
 
 dotenv.config();
 
 const fetchMovieFromTMDB = async (movieId) => {
   const url = `${process.env.TMDB_API_BASE_URL}/movie/${movieId}?api_key=${process.env.TMDB_API_KEY}&language=en-UK`;
-  console.log(url);
 
   try {
     const response = await fetch(url);
     const data = await response.json();
     return data;
   } catch (err) {
-    console.error("Error fetching movies from TMDB: ", err);
     throw err;
   }
 };
@@ -30,7 +27,6 @@ const AddToWatchList = async (req, res) => {
     if (!movie) {
       const movieData = await fetchMovieFromTMDB(movieId);
       movie = await SaveMovie(movieData);
-      console.log("Movie added to the database: ", movie);
     }
 
     const user = await User.findOne({ username });
@@ -40,12 +36,10 @@ const AddToWatchList = async (req, res) => {
     }
 
     if (user.watchList?.some((item) => item.movie === movieId)) {
-      console.error("Movie already in watchlist", movieId);
       throw new Error("Movie already in watchlist");
     }
 
     if (movie) {
-      console.log("Movie found in the database: ", movie);
       user.watchList.push({
         movieId: movie._id,
         movie: movieId,
@@ -53,7 +47,6 @@ const AddToWatchList = async (req, res) => {
         watched: false,
       });
     } else {
-      console.error("Movie not found in the database");
       return res
         .status(404)
         .json({ message: "Movie not found in the database" });
@@ -66,7 +59,6 @@ const AddToWatchList = async (req, res) => {
       watched: false,
     } });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Server error", error: err });
   }
 };
@@ -94,7 +86,6 @@ const RemoveFromWatchList = async (req, res) => {
     await user.save();
     res.status(200).json({ message: "Movie removed from watchlist" });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -144,7 +135,6 @@ const GetWatchList = async (req, res) => {
     }
     return res.status(200).json({ message: "Watchlist fetched successfully", data: watchList });
   } catch (err) {
-    console.error(err);
     return res.status(500).json({ message: "Server error", error: err });
   }
 };
@@ -164,7 +154,6 @@ const ClearWatchList = async (req, res) => {
 
     return res.status(200).json({ message: "Watchlist cleared successfully" });
   } catch (err) {
-    console.error(err);
     return res.status(500).json({ message: "Server error", error: err });
   }
 }

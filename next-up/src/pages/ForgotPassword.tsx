@@ -32,7 +32,6 @@ const ForgotPassword = () => {
           throw new Error('Failed to send reset link')
         }
       } catch (error) {
-        console.error(error)
       }
       setIsLoading(false)
     }

@@ -22,7 +22,6 @@ const Categories = () => {
 
   const fetchMovies = async (page: number) => {
     const apiUrl = `${import.meta.env.VITE_TMDB_API_BASE_URL}/movie/top_rated?language=en-UK&page=${page}&api_key=${import.meta.env.VITE_TMDB_API_KEY}`
-    console.log('Fetching movies:', apiUrl)
 
     const res = await fetch(apiUrl)
     if (!res.ok) {
