@@ -95,7 +95,7 @@ const MovieModal = ({ id, type, onClose }: MovieModalProps) => {
 
   const addMutation = useMutation({
     mutationKey: ['addToWatchlist'],
-    mutationFn: async (movieId: number) => addToWatchlist(user?.username, movieId),
+    mutationFn: async (movieId: number) => await addToWatchlist(user?.username, movieId),
     onSuccess: (data) => {
       dispatch(setUser({ ...user, watchList: [...user.watchList, data] })) 
       queryClient.invalidateQueries(['watchlist', user?.username])
@@ -109,7 +109,7 @@ const MovieModal = ({ id, type, onClose }: MovieModalProps) => {
 
   const deleteMutation = useMutation({
     mutationKey: ['deleteFromWatchlist'],
-    mutationFn: async (movieId: number) => removeFromWatchlist(user?.username, movieId),
+    mutationFn: async (movieId: number) => await removeFromWatchlist(user?.username, movieId),
     onSuccess: () => {
       dispatch(setUser({ ...user, watchList: user.watchList.filter((m: { movieId: number }) => m.movieId !== id) })) 
       queryClient.invalidateQueries(['watchlist', user?.username])

@@ -142,7 +142,7 @@ const MovieDetails = () => {
 
   const addMutation = useMutation({
     mutationKey: ['addToWatchlist', user?.username],
-    mutationFn: async () => addToWatchlist(user?.username, parseInt(movieId)),
+    mutationFn: async () => await addToWatchlist(user?.username, parseInt(movieId)),
     onSuccess: (data) => {
       setBookmarked(true)
       dispatch(setUser({...user, watchlist: [...user.watchlist, data]}))
@@ -156,7 +156,7 @@ const MovieDetails = () => {
 
   const deleteMutation = useMutation({
     mutationKey: ['deleteFromWatchlist', user?.username],
-    mutationFn: async () => removeFromWatchlist(user?.username, parseInt(movieId)),
+    mutationFn: async () => await removeFromWatchlist(user?.username, parseInt(movieId)),
     onSuccess: () => {
       setBookmarked(false)
       watchlist?.splice(
