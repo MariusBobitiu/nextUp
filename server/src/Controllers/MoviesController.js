@@ -32,11 +32,13 @@ const AddToWatchList = async (req, res) => {
     const user = await User.findOne({ username });
 
     if (!user) {
+      console.error(`[${new Date().toISOString()}] [POST] /:username/watchlist - User not found: username: ${username}`);
       return res.status(404).json({ message: "User not found" });
     }
 
     if (user.watchList?.some((item) => item.movie === movieId)) {
-      throw new Error("Movie already in watchlist");
+      console.error(`[${new Date().toISOString()}] [POST] /:username/watchlist - Movie already in watchlist: movieId: ${movieId}`);
+      return res.status(400).json({ message: "Movie already in watchlist" });
     }
 
     if (movie) {
@@ -47,18 +49,22 @@ const AddToWatchList = async (req, res) => {
         watched: false,
       });
     } else {
+      console.error(`[${new Date().toISOString()}] [POST] /:username/watchlist - Movie not found in the database: movieId: ${movieId}`);
       return res
         .status(404)
         .json({ message: "Movie not found in the database" });
     }
 
     await user.save();
+
+    console.log(`[${new Date().toISOString()}] [POST] /:username/watchlist - Movie added to watchlist successfully: movieId: ${movieId}, username: ${username}`);
     res.status(201).json({ message: {
       movie: movieId,
       addedAt: new Date(),
       watched: false,
     } });
   } catch (err) {
+    console.error(`[${new Date().toISOString()}] [POST] /:username/watchlist - Error adding movie to watchlist: ${err.message}`);
     res.status(500).json({ message: "Server error", error: err });
   }
 };
@@ -71,10 +77,13 @@ const RemoveFromWatchList = async (req, res) => {
     const user = await User.findOne({ username });
 
     if (!user) {
+      console.error(`[${new Date().toISOString()}] [DELETE] /:username/watchlist - User not found: username: ${username}`);
+
       return res.status(404).json({ message: "User not found" });
     }
 
     if (!user.watchList.some((item) => item.movie === movieId)) {
+      console.error(`[${new Date().toISOString()}] [DELETE] /:username/watchlist - Movie not found in watchlist: movieId: ${movieId}`);
       return res.status(404).json({ message: "Movie not found in watchlist" });
     }
 
@@ -84,8 +93,10 @@ const RemoveFromWatchList = async (req, res) => {
     }
 
     await user.save();
+    console.log(`[${new Date().toISOString()}] [DELETE] /:username/watchlist - Movie removed from watchlist successfully: movieId: ${movieId}, username: ${username}`);
     res.status(200).json({ message: "Movie removed from watchlist" });
   } catch (err) {
+    console.error(`[${new Date().toISOString()}] [DELETE] /:username/watchlist - Error removing movie from watchlist: ${err.message}`);
     res.status(500).json({ message: "Server error" });
   }
 };

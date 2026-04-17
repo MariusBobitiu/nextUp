@@ -13,6 +13,7 @@ const ForgotPassword = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) {
+      console.error(`[${new Date().toISOString()}] [POST] /forgot-password - User not found: email: ${email}`);
       return res.status(404).json({ message: 'User not found' });
     }
 
@@ -28,8 +29,10 @@ const ForgotPassword = async (req, res) => {
     // Send email
     await sendEmail(user, token);
 
+    console.log(`[${new Date().toISOString()}] [POST] /forgot-password - Reset link sent successfully: email: ${email}`);
     res.status(200).json({ message: 'Reset link sent to your email' });
   } catch (error) {
+    console.error(`[${new Date().toISOString()}] [POST] /forgot-password - Error sending reset link: ${error.message}`);
     return res.status(500).json({ error: error.message });
   }
 }
@@ -66,18 +69,21 @@ const ResetPassword = async (req, res) => {
   const {token, newPassword } = req.body;
 
   if (!token) {
+    console.error(`[${new Date().toISOString()}] [POST] /reset-password - No token provided`);
     return res.status(401).json({ message: 'Authentication error' });
   }
 
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
       if (err) {
+        console.error(`[${new Date().toISOString()}] [POST] /reset-password - Token expired or invalid: ${err.message}`);
         return res.status(401).json({ message: 'Token expired or invalid' });
       }
 
       try {
         const user = await User.findOne({ resetLink: token });
         if (!user) {
+          console.error(`[${new Date().toISOString()}] [POST] /reset-password - User not found for token: ${token}`);
           return res.status(404).json({ message: 'User not found' });
         }
 
@@ -89,11 +95,12 @@ const ResetPassword = async (req, res) => {
 
         return res.status(200).json({ message: 'Password reset successfully' });
       } catch (error) {
-        console.error('Error resetting password:', error);
+        console.error(`[${new Date().toISOString()}] [POST] /reset-password - Error resetting password: ${error.message}`);
         return res.status(500).json({ error: error.message });
       }
     });
   } else {
+    console.error(`[${new Date().toISOString()}] [POST] /reset-password - No token provided`);
     return res.status(401).json({ message: 'Authentication error' });
   }
 }
@@ -107,6 +114,7 @@ const UpdateUser = async (req, res) => {
     const { email, username } = req.body;
 
     if (!user) {
+      console.error(`[${new Date().toISOString()}] [PUT] /:username/update-user - User not found: username: ${username}`);
       return res.status(404).json({ message: 'User not found' });
     }
 
@@ -115,9 +123,10 @@ const UpdateUser = async (req, res) => {
 
     await user.save();
 
+    console.log(`[${new Date().toISOString()}] [PUT] /:username/update-user - User updated successfully: username: ${username}`);
     return res.status(200).json({ message: 'User updated successfully', user });
   } catch (error) {
-    console.error('Error updating user:', error);
+    console.error(`[${new Date().toISOString()}] [PUT] /:username/update-user - Error updating user: ${error.message}`);
     return res.status(500).json({ error: error.message });
   }
 }
@@ -130,6 +139,7 @@ const UpdatePassword = async (req, res) => {
     const { currentPassword, newPassword } = req.body;
 
     if (!user) {
+      console.error(`[${new Date().toISOString()}] [PUT] /:username/update-password - User not found: username: ${username}`);
       return res.status(404).json({ message: 'User not found' });
     }
 
@@ -142,8 +152,10 @@ const UpdatePassword = async (req, res) => {
 
     await user.save();
 
+    console.log(`[${new Date().toISOString()}] [PUT] /:username/update-password - Password updated successfully: username: ${username}`);
     return res.status(200).json({ message: 'Password updated successfully' });
   } catch (error) {
+    console.error(`[${new Date().toISOString()}] [PUT] /:username/update-password - Error updating password: ${error.message}`);
     return res.status(500).json({ error: error.message });
   }
 }
@@ -153,12 +165,14 @@ const DeleteUser = async (req, res) => {
   try {
     const result = await User.deleteOne({ username: req.params.username });
     if (result.deletedCount === 0) {
+      console.error(`[${new Date().toISOString()}] [DELETE] /:username - User not found: username: ${req.params.username}`);
       return res.status(404).json({ message: 'User not found' });
     } else {
+      console.log(`[${new Date().toISOString()}] [DELETE] /:username - User deleted successfully: username: ${req.params.username}`);
       return res.status(200).json({ message: 'User deleted successfully' });
     }
   } catch (error) {
-    console.error('Error deleting user:', error);
+    console.error(`[${new Date().toISOString()}] [DELETE] /:username - Error deleting user: ${error.message}`);
     return res.status(500).json({ error: error.message });
   }
 }
@@ -167,10 +181,10 @@ const DeleteUser = async (req, res) => {
 const Logout = async (req, res) => {
   try {
     res.clearCookie('token');
+    console.log(`[${new Date().toISOString()}] [POST] /:username/logout - User logged out successfully: username: ${req.params.username}`);
     return res.status(200).json({ message: 'User logged out successfully' });
   } catch (error) {
-    console.error('Error logging out user:', error);
-
+    console.error(`[${new Date().toISOString()}] [POST] /:username/logout - Error logging out user: ${error.message}`);
     return res.status(500).json({ error: error.message });
   }
 }
