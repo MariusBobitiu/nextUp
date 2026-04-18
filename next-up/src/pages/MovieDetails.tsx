@@ -25,9 +25,8 @@ import MoviePlayerModal from '@/components/MoviePlayerModal'
 import { formatCurrency, getLanguage } from '@/lib/utils'
 import ReviewComponent from '@/components/ReviewComponent'
 import { Review } from '@/types/MovieDetails'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { addToWatchlist, removeFromWatchlist } from '@/lib/watchlist'
-import { setUser } from '@/features/user/userSlice'
 
 const MovieDetails = () => {
   const { slug } = useParams()
@@ -39,7 +38,6 @@ const MovieDetails = () => {
   const [activeSection, setActiveSection] = useState('similar')
 
   const queryClient = useQueryClient();
-  const dispatch = useDispatch()
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const user = useSelector((state: any) => state.user.user)
@@ -53,7 +51,7 @@ const MovieDetails = () => {
   const {
     data: watchlist,
   } = useQuery({
-    queryKey: ['watchlist'],
+    queryKey: ['watchlist', user?.username],
     queryFn: async () => await fetchUserWatchlist(user?.username),
     enabled: !!user?.username,
   });
@@ -143,10 +141,9 @@ const MovieDetails = () => {
   const addMutation = useMutation({
     mutationKey: ['addToWatchlist', user?.username],
     mutationFn: async () => await addToWatchlist(user?.username, parseInt(movieId)),
-    onSuccess: (data) => {
+    onSuccess: async () => {
       setBookmarked(true)
-      dispatch(setUser({...user, watchlist: [...user.watchlist, data]}))
-      queryClient.invalidateQueries(['watchlist', user?.username])
+      await queryClient.invalidateQueries(['watchlist', user?.username])
     },
     onError: () => {
       alert('Error adding movie to watchlist')
@@ -157,14 +154,9 @@ const MovieDetails = () => {
   const deleteMutation = useMutation({
     mutationKey: ['deleteFromWatchlist', user?.username],
     mutationFn: async () => await removeFromWatchlist(user?.username, parseInt(movieId)),
-    onSuccess: () => {
+    onSuccess: async () => {
       setBookmarked(false)
-      watchlist?.splice(
-        watchlist?.findIndex((movie: { movieId: number }) => movie.movieId === parseInt(movieId)),
-        1
-      )
-      dispatch(setUser({...user, watchList: watchlist}))
-      queryClient.invalidateQueries(['watchlist', user?.username])
+      await queryClient.invalidateQueries(['watchlist', user?.username])
     },
     onError: () => {
       alert('Error removing movie from watchlist')

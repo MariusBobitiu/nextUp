@@ -19,7 +19,6 @@ export const addToWatchlist = async (username: string, movieId: number) => {
 
 		return data;
 	} catch (error) {
-		console.error('Error adding movie to watchlist:', error)
 		throw error // Will be caught by the caller to handle the error appropriately
 	}
 };
@@ -37,7 +36,6 @@ export const removeFromWatchlist = async (username: string, movieId: number) => 
 		}
 		return true
 	} catch (error) {
-		console.error('Error removing movie from watchlist:', error)
 		throw error // Will be caught by the caller to handle the error appropriately
 	}
 }

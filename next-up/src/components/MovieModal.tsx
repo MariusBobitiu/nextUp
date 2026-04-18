@@ -6,8 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react';
 import VerticalCarousel from './VerticalCarousel';
 import { paragraphs } from '@/lib/consts';
-import { useDispatch, useSelector } from 'react-redux';
-import { setUser } from '@/features/user/userSlice';
+import { useSelector } from 'react-redux';
 import { fetchUserWatchlist } from '@/lib/fetchData';
 import { addToWatchlist, removeFromWatchlist } from '@/lib/watchlist';
 
@@ -55,7 +54,6 @@ type MovieModalProps = {
 const MovieModal = ({ id, type, onClose }: MovieModalProps) => {
   const [isVisible, setIsVisible] = useState(false)
   const [bookmarked, setBookmarked] = useState(false)
-  const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -94,9 +92,8 @@ const MovieModal = ({ id, type, onClose }: MovieModalProps) => {
   const addMutation = useMutation({
     mutationKey: ['addToWatchlist'],
     mutationFn: async (movieId: number) => await addToWatchlist(user?.username, movieId),
-    onSuccess: (data) => {
-      dispatch(setUser({ ...user, watchList: [...user.watchList, data] })) 
-      queryClient.invalidateQueries(['watchlist', user?.username])
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(['watchlist', user?.username])
       setBookmarked(true)
     },
     onError: () => {
@@ -108,9 +105,8 @@ const MovieModal = ({ id, type, onClose }: MovieModalProps) => {
   const deleteMutation = useMutation({
     mutationKey: ['deleteFromWatchlist'],
     mutationFn: async (movieId: number) => await removeFromWatchlist(user?.username, movieId),
-    onSuccess: () => {
-      dispatch(setUser({ ...user, watchList: user.watchList.filter((m: { movieId: number }) => m.movieId !== id) })) 
-      queryClient.invalidateQueries(['watchlist', user?.username])
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(['watchlist', user?.username])
       setBookmarked(false)
     },
     onError: (err) => {

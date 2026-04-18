@@ -22,7 +22,7 @@ const Profile = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['watchList', user?.username],
+    queryKey: ['watchlist', user?.username],
     queryFn: async () => await fetchUserWatchlist(user?.username),
     enabled: !!user?.username,
   })

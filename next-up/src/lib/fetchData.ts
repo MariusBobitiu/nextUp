@@ -162,7 +162,6 @@ export const fetchUserWatchlist = async (username: string) => {
 
     return (await res.json()).data
   } catch (error) {
-    console.error('Error fetching user watchlist:', error)
     throw error
   }
 }

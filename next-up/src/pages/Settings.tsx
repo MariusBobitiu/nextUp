@@ -70,7 +70,7 @@ const Settings = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['watchList', user?.username],
+    queryKey: ['watchlist', user?.username],
     queryFn: async () => await fetchUserWatchlist(user?.username),
     enabled: !!user?.username,
   })
@@ -138,9 +138,7 @@ const Settings = () => {
       return data
     },
     onSuccess: () => {
-      // Clear watchlist in Redux store
-      dispatch(setUser({ ...user, watchList: [] }))
-      queryClient.invalidateQueries(['watchList', user.username])
+      queryClient.invalidateQueries(['watchlist', user.username])
     },
     onError: (error) => {
       setError((prev) => ({
