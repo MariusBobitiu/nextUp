@@ -70,20 +70,19 @@ const AddToWatchList = async (req, res) => {
 };
 
 const RemoveFromWatchList = async (req, res) => {
-  const { username } = req.params;
-  const { movieId } = req.body;
+  const { username, movieId } = req.params;
 
   try {
     const user = await User.findOne({ username });
 
     if (!user) {
-      console.error(`[${new Date().toISOString()}] [DELETE] /:username/watchlist - User not found: username: ${username}`);
+      console.error(`[${new Date().toISOString()}] [DELETE] /:username/watchlist/:movieId - User not found: username: ${username}`);
 
       return res.status(404).json({ message: "User not found" });
     }
 
     if (!user.watchList.some((item) => item.movie === movieId)) {
-      console.error(`[${new Date().toISOString()}] [DELETE] /:username/watchlist - Movie not found in watchlist: movieId: ${movieId}`);
+      console.error(`[${new Date().toISOString()}] [DELETE] /:username/watchlist/:movieId - Movie not found in watchlist: movieId: ${movieId}`);
       return res.status(404).json({ message: "Movie not found in watchlist" });
     }
 
@@ -93,11 +92,11 @@ const RemoveFromWatchList = async (req, res) => {
     }
 
     await user.save();
-    console.log(`[${new Date().toISOString()}] [DELETE] /:username/watchlist - Movie removed from watchlist successfully: movieId: ${movieId}, username: ${username}`);
-    res.status(200).json({ message: "Movie removed from watchlist" });
+    console.log(`[${new Date().toISOString()}] [DELETE] /:username/watchlist/:movieId - Movie removed from watchlist successfully: movieId: ${movieId}, username: ${username}`);
+    return res.status(200).json({ message: "Movie removed from watchlist" });
   } catch (err) {
-    console.error(`[${new Date().toISOString()}] [DELETE] /:username/watchlist - Error removing movie from watchlist: ${err.message}`);
-    res.status(500).json({ message: "Server error" });
+    console.error(`[${new Date().toISOString()}] [DELETE] /:username/watchlist/:movieId - Error removing movie from watchlist: ${err.message}`);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 

@@ -9,7 +9,7 @@ router.get("/:username/watchlist", GetWatchList);
 router.post("/:username/watchlist", AddToWatchList);
 
 // Remove from watchList
-router.delete("/:username/watchlist", RemoveFromWatchList);
+router.delete("/:username/watchlist/:movieId", RemoveFromWatchList);
 
 router.delete("/:username/watchlist/clear", ClearWatchList)
 
