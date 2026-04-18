@@ -20,9 +20,10 @@ const fetchMovieFromTMDB = async (movieId) => {
 const AddToWatchList = async (req, res) => {
   const { username } = req.params;
   const { movieId } = req.body;
+  const normalizedMovieId = String(movieId);
 
   try {
-    let movie = await Movie.findOne({ movieId: String(movieId) });
+    let movie = await Movie.findOne({ movieId: normalizedMovieId });
 
     if (!movie) {
       const movieData = await fetchMovieFromTMDB(movieId);
@@ -36,7 +37,7 @@ const AddToWatchList = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (user.watchList?.some((item) => item.movie === movieId)) {
+    if (user.watchList?.some((item) => String(item.movie) === normalizedMovieId)) {
       console.error(`[${new Date().toISOString()}] [POST] /:username/watchlist - Movie already in watchlist: movieId: ${movieId}`);
       return res.status(400).json({ message: "Movie already in watchlist" });
     }
@@ -44,7 +45,7 @@ const AddToWatchList = async (req, res) => {
     if (movie) {
       user.watchList.push({
         movieId: movie._id,
-        movie: movieId,
+        movie: Number(movieId),
         addedAt: new Date(),
         watched: false,
       });
@@ -71,6 +72,7 @@ const AddToWatchList = async (req, res) => {
 
 const RemoveFromWatchList = async (req, res) => {
   const { username, movieId } = req.params;
+  const normalizedMovieId = String(movieId);
 
   try {
     const user = await User.findOne({ username });
@@ -81,12 +83,14 @@ const RemoveFromWatchList = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (!user.watchList.some((item) => item.movie === movieId)) {
+    if (!user.watchList.some((item) => String(item.movie) === normalizedMovieId)) {
       console.error(`[${new Date().toISOString()}] [DELETE] /:username/watchlist/:movieId - Movie not found in watchlist: movieId: ${movieId}`);
       return res.status(404).json({ message: "Movie not found in watchlist" });
     }
 
-    user.watchList = user.watchList.filter((item) => item.movie !== movieId);
+    user.watchList = user.watchList.filter(
+      (item) => String(item.movie) !== normalizedMovieId
+    );
     if (user.watchList.length === 0) {
       user.watchList = [];
     }
