@@ -15,6 +15,13 @@ const MoviePlayerModal = ({
   setVideoKey,
 }: props) => {
   const [isOpen, setIsOpen] = useState(false)
+  const embedUrl = videoKey
+    ? `https://www.youtube.com/embed/${videoKey}?${new URLSearchParams({
+        origin: window.location.origin,
+        rel: '0',
+        playsinline: '1',
+      }).toString()}`
+    : ''
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -64,8 +71,9 @@ const MoviePlayerModal = ({
             <iframe
               width="100%"
               height="100%"
-              src={`https://www.youtube.com/embed/${videoKey}`}
+              src={embedUrl}
               title="YouTube video player"
+              referrerPolicy="strict-origin-when-cross-origin"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             ></iframe>
