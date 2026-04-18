@@ -113,8 +113,9 @@ const MovieModal = ({ id, type, onClose }: MovieModalProps) => {
       queryClient.invalidateQueries(['watchlist', user?.username])
       setBookmarked(false)
     },
-    onError: () => {
-      alert('Error removing movie from watchlist. Please try again.')
+    onError: (err) => {
+      const error = (err instanceof Error) ? err : new Error(String(err));
+      alert(error.message || 'Error removing movie from watchlist. Please try again.')
       queryClient.invalidateQueries(['watchlist', user?.username])
     }
   })
