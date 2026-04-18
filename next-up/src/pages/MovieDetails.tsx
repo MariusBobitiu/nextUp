@@ -54,7 +54,7 @@ const MovieDetails = () => {
     data: watchlist,
   } = useQuery({
     queryKey: ['watchlist'],
-    queryFn: async () => fetchUserWatchlist(user?.username),
+    queryFn: async () => await fetchUserWatchlist(user?.username),
     enabled: !!user?.username,
   });
 
@@ -70,61 +70,61 @@ const MovieDetails = () => {
     data: movie,
     isLoading,
     isError,
-  } = useQuery('movie', () => fetchMovie(movieId || ''), {
+  } = useQuery('movie', async () => await fetchMovie(movieId || ''), {
     enabled: !!movieId,
   })
   const { data: releaseDate } = useQuery(
     'releaseDate',
-    () => fetchReleaseDateGB(movieId || ''),
+    async () => await fetchReleaseDateGB(movieId || ''),
     {
       enabled: !!movieId,
     }
   )
   const { data: credits } = useQuery(
     'credits',
-    () => fetchCredits(movieId || ''),
+    async () => await fetchCredits(movieId || ''),
     {
       enabled: !!movieId,
     }
   )
   const { data: keywords } = useQuery(
     'keywords',
-    () => fetchKeywords(movieId || ''),
+    async () => await fetchKeywords(movieId || ''),
     {
       enabled: !!movieId,
     }
   )
   const { data: images } = useQuery(
     'images',
-    () => fetchImages(movieId || ''),
+    async () => await fetchImages(movieId || ''),
     {
       enabled: !!movieId,
     }
   )
   const { data: videos } = useQuery(
     'videos',
-    () => fetchVideos(movieId || ''),
+    async () => await fetchVideos(movieId || ''),
     {
       enabled: !!movieId,
     }
   )
   const { data: reviews } = useQuery(
     'reviews',
-    () => fetchReviews(movieId || ''),
+    async () => await fetchReviews(movieId || ''),
     {
       enabled: !!movieId,
     }
   )
   const { data: similarMovies } = useQuery(
     'similarMovies',
-    () => fetchSimilarMovies(movieId || ''),
+    async () => await fetchSimilarMovies(movieId || ''),
     {
       enabled: !!movieId,
     }
   )
   const { data: recommendations } = useQuery(
     'recommendations',
-    () => fetchRecommendations(movieId || ''),
+    async () => await fetchRecommendations(movieId || ''),
     {
       enabled: !!movieId,
     }

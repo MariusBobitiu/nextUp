@@ -72,7 +72,7 @@ const Search = () => {
     error,
   } = useQuery(
     ['movies', term, page],
-    () => (term !== '' ? fetchMoviesByTerm(page, term) : fetchMovies(page)),
+    async () => (term !== '' ? await fetchMoviesByTerm(page, term) : await fetchMovies(page)),
     {
       keepPreviousData: true,
       enabled: true,

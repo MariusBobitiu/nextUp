@@ -1,0 +1,53 @@
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: next-up
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build:
+      context: ./server
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      MONGO_URI: mongodb://mongo:27017
+      DB_NAME: next-up
+      PORT: 8081
+      JWT_SECRET: ${JWT_SECRET}
+      SALT_ROUNDS: ${SALT_ROUNDS:-10}
+      COOKIE_EXPIRATION: ${COOKIE_EXPIRATION:-30d}
+      TMDB_API_BASE_URL: https://api.themoviedb.org/3
+      TMDB_API_KEY: ${TMDB_API_KEY}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      EMAIL_FROM: ${EMAIL_FROM}
+      CLIENT_URL: ${CLIENT_URL:-http://localhost}
+    ports:
+      - "8081:8081"
+
+  frontend:
+    build:
+      context: ./next-up
+      args:
+        VITE_TMDB_API_BASE_URL: https://api.themoviedb.org/3
+        VITE_TMDB_IMAGE_BASE_URL: https://image.tmdb.org/t/p/original
+        VITE_TMDB_API_KEY: ${TMDB_API_KEY}
+        VITE_SV_API_BASE_URL: ${VITE_SV_API_BASE_URL:-http://localhost:8081}
+        VITE_CLIENT_URL: ${CLIENT_URL:-http://localhost}
+    restart: unless-stopped
+    depends_on:
+      - server
+    ports:
+      - "80:80"
+
+volumes:
+  mongo_data:

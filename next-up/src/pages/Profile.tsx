@@ -23,13 +23,13 @@ const Profile = () => {
     error,
   } = useQuery({
     queryKey: ['watchList', user?.username],
-    queryFn: async () => fetchUserWatchlist(user?.username),
+    queryFn: async () => await fetchUserWatchlist(user?.username),
     enabled: !!user?.username,
   })
 
   if (isLoading) return <Loading />
 
-  if (error) return <h1>Error</h1>
+  if (error) return <div>Error loading watchlist</div>
 
 
   return (

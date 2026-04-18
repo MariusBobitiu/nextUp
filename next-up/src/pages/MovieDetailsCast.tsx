@@ -10,10 +10,10 @@ const MovieDetailsCast = () => {
     const { slug } = useParams()
     const movieId = slug?.split('-').reverse().pop()
 
-    const { data: movie, isLoading, isError } = useQuery('movie', () => fetchMovie(movieId || ''), {
+    const { data: movie, isLoading, isError } = useQuery('movie', async () => await fetchMovie(movieId || ''), {
         enabled: !!movieId,
     })
-    const {data: credits} = useQuery('credits', () => fetchCredits(movieId || ''), {
+    const {data: credits} = useQuery('credits', async () => await fetchCredits(movieId || ''), {
         enabled: !!movieId,
     })
 

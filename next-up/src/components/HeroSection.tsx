@@ -10,6 +10,8 @@ const HeroSection = () => {
       const data = await response.json()
       return data.results
     } catch (err) {
+      console.error('Error fetching popular movies:', err)
+      throw err
     }
   }
 

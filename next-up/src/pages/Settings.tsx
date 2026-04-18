@@ -71,7 +71,7 @@ const Settings = () => {
     isError,
   } = useQuery({
     queryKey: ['watchList', user?.username],
-    queryFn: async () => fetchUserWatchlist(user?.username),
+    queryFn: async () => await fetchUserWatchlist(user?.username),
     enabled: !!user?.username,
   })
 
@@ -265,7 +265,7 @@ const Settings = () => {
 
   if (isLoading) return <Loading />
 
-  if (isError) return <h1>Error</h1>
+  if (isError) return <div>Error loading watchlist</div>
 
   return (
     <>

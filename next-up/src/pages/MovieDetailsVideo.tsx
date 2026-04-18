@@ -9,15 +9,15 @@ const MovieDetailsVideo = () => {
     const { slug } = useParams<{ slug: string }>()
     const movieId = slug?.split('-')[0]
 
-    const {data: movie } = useQuery('movie', () => fetchMovie(movieId || ''), {
+    const {data: movie } = useQuery('movie', async () => await fetchMovie(movieId || ''), {
         enabled: !!movieId
     })
-    const {data: videos, isLoading, isError } = useQuery('videos', () => fetchVideos(movieId || ''), {
+    const {data: videos, isLoading, isError } = useQuery('videos', async () => await fetchVideos(movieId || ''), {
         enabled: !!movieId
     })
 
-    if (isLoading) <Loading />
-    if (isError) <div>Error fetching videos</div>
+    if (isLoading) return <Loading />
+    if (isError) return <div>Error fetching videos</div>
 
     return (
     <>

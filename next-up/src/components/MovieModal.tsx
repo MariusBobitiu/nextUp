@@ -46,8 +46,6 @@ const fetchCast = async (id: number, type: 'tv' | 'movie' | 'person') => {
   return data
 }
 
-
-
 type MovieModalProps = {
   id: number
   type: 'movie' | 'tv' | 'person'
@@ -68,13 +66,13 @@ const MovieModal = ({ id, type, onClose }: MovieModalProps) => {
     data: movie,
     isLoading,
     isError,
-  } = useQuery(['movie', id], () => fetchMovies(id, type), {
+  } = useQuery(['movie', id], async () => await fetchMovies(id, type), {
     enabled: id !== 0,
   })
 
   const {data: watchlist} = useQuery({
     queryKey: ['watchlist', user?.username],
-    queryFn: () => fetchUserWatchlist(user?.username),
+    queryFn: async () => await fetchUserWatchlist(user?.username),
     enabled: !!user?.username,
   })
 
@@ -86,10 +84,10 @@ const MovieModal = ({ id, type, onClose }: MovieModalProps) => {
     }
   }, [watchlist, id])
 
-  const {data: watchProviders} = useQuery(['watchProviders', id], () => fetchWatchProviders(id, type), {
+  const {data: watchProviders} = useQuery(['watchProviders', id], async () => await fetchWatchProviders(id, type), {
     enabled: id !== 0 && type !== 'person',
   });
-  const {data: cast} = useQuery(['cast', id], () => fetchCast(id, type), {
+  const {data: cast} = useQuery(['cast', id], async () => await fetchCast(id, type), {
     enabled: id !== 0 && type !== 'person',
   });
 
